@@ -4,7 +4,7 @@
 #include <DirectXMath.h>
 #include <wrl/client.h> // Used for ComPtr - a smart pointer for COM objects
 
-#include "Mesh.h"	// I think this is right, geometry data will be held in the mesh class so Game will need to pull from it, not the other way around.
+#include "Mesh.h"	// Geometry data will be held in the mesh class, so Game will need to pull from it
 
 class Game 
 	: public DXCore
@@ -28,14 +28,16 @@ private:
 	void CreateBasicGeometry();
 
 	
+	Mesh tempMeshObject_RENAME_LATER;
+
 	// Note the usage of ComPtr below
 	//  - This is a smart pointer for objects that abide by the
 	//    Component Object Mode, which DirectX objects do
 	//  - More info here: https://github.com/Microsoft/DirectXTK/wiki/ComPtr
 
-	// Buffers to hold actual geometry data
-	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
+	//// Buffers to hold actual geometry data
+	//Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
+	//Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
 
 	// Shaders and shader-related constructs
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;

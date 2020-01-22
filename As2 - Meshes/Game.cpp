@@ -193,7 +193,7 @@ void Game::CreateBasicGeometry()
 
 	// Actually create the buffer with the initial data
 	// - Once we do this, we'll NEVER CHANGE THE BUFFER AGAIN
-	device->CreateBuffer(&vbd, &initialVertexData, vertexBuffer.GetAddressOf());
+	device->CreateBuffer(&vbd, &initialVertexData, tempMeshObject_RENAME_LATER.GetVertexBuffer().GetAddressOf());	//tempMeshObject_RENAME_LATER->vertexBuffer.GetAddressOf() //WONT WORK BECAUSE VB IS PRIVATE
 
 
 
@@ -215,7 +215,7 @@ void Game::CreateBasicGeometry()
 
 	// Actually create the buffer with the initial data
 	// - Once we do this, we'll NEVER CHANGE THE BUFFER AGAIN
-	device->CreateBuffer(&ibd, &initialIndexData, indexBuffer.GetAddressOf());
+	device->CreateBuffer(&ibd, &initialIndexData, tempMeshObject_RENAME_LATER.GetIndexBuffer().GetAddressOf());
 }
 
 
@@ -282,8 +282,8 @@ void Game::Draw(float deltaTime, float totalTime)
 	//    in a larger application/game
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
-	context->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-	context->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	context->IASetVertexBuffers(0, 1, tempMeshObject_RENAME_LATER.GetVertexBuffer().GetAddressOf(), &stride, &offset);
+	context->IASetIndexBuffer(tempMeshObject_RENAME_LATER.GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
 
 	// Finally do the actual drawing
