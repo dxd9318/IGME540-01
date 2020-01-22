@@ -4,6 +4,8 @@
 #include <DirectXMath.h>
 #include <wrl/client.h> // Used for ComPtr - a smart pointer for COM objects
 
+#include "Mesh.h"	// I think this is right, geometry data will be held in the mesh class so Game will need to pull from it, not the other way around.
+
 class Game 
 	: public DXCore
 {
