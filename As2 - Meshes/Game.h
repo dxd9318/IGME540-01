@@ -28,7 +28,7 @@ private:
 	void CreateBasicGeometry();
 
 	
-	Mesh tempMeshObject_RENAME_LATER;
+	Mesh tempMeshObject_RENAME_LATER;	// WILL NEED TO ALLOCATE HERE TO FEED IN PARAMS... FIND WHERE TO DEALLOCATE -- MEMORY LEAK WILL OCCUR OTHERWISE
 
 	// Note the usage of ComPtr below
 	//  - This is a smart pointer for objects that abide by the

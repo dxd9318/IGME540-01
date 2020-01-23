@@ -58,6 +58,8 @@ void Game::Init()
 	LoadShaders();
 	CreateBasicGeometry();
 
+
+
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives (points, lines or triangles) we want to draw.  
 	// Essentially: "What kind of shape should the GPU draw with our data?"
@@ -173,8 +175,15 @@ void Game::CreateBasicGeometry()
 	//    in the correct order and each one will be used exactly once
 	// - But just to see how it's done...
 	int indices[] = { 0, 1, 2 };
+	
+
+	// INIT MESH OBJ HERE, FEED IN VERTICES, INDICES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	//tempMeshObject_RENAME_LATER = new Mesh(,,,,);
+
+	//tempMeshObject_RENAME_LATER = new Mesh(vertices, /*length of vertices array*/, indices, /*length of indices array*/, device);
 
 
+	/*
 	// Create the VERTEX BUFFER description -----------------------------------
 	// - The description is created on the stack because we only need
 	//    it to create the buffer.  The description is then useless.
@@ -194,7 +203,7 @@ void Game::CreateBasicGeometry()
 	// Actually create the buffer with the initial data
 	// - Once we do this, we'll NEVER CHANGE THE BUFFER AGAIN
 	device->CreateBuffer(&vbd, &initialVertexData, tempMeshObject_RENAME_LATER.GetVertexBuffer().GetAddressOf());	//tempMeshObject_RENAME_LATER->vertexBuffer.GetAddressOf() //WONT WORK BECAUSE VB IS PRIVATE
-
+	
 
 
 	// Create the INDEX BUFFER description ------------------------------------
@@ -216,6 +225,7 @@ void Game::CreateBasicGeometry()
 	// Actually create the buffer with the initial data
 	// - Once we do this, we'll NEVER CHANGE THE BUFFER AGAIN
 	device->CreateBuffer(&ibd, &initialIndexData, tempMeshObject_RENAME_LATER.GetIndexBuffer().GetAddressOf());
+	*/
 }
 
 
@@ -292,7 +302,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	//  - DrawIndexed() uses the currently set INDEX BUFFER to look up corresponding
 	//     vertices in the currently set VERTEX BUFFER
 	context->DrawIndexed(
-		3,     // The number of indices to use (we could draw a subset if we wanted)
+		tempMeshObject_RENAME_LATER.GetIndexCount(),    //3, // The number of indices to use (we could draw a subset if we wanted)
 		0,     // Offset to the first index we want to use
 		0);    // Offset to add to each index when looking up vertices
 
