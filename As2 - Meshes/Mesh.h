@@ -13,11 +13,12 @@ public:
 	//Destructor
 	~Mesh();
 
+	// Getters for private members
 	Microsoft::WRL::ComPtr<ID3D11Buffer> GetVertexBuffer();
 	Microsoft::WRL::ComPtr<ID3D11Buffer> GetIndexBuffer();
 	int GetIndexCount();
 
-private:	// WILL NEED TO CREATE GETTERS FOR PRIVATE BUFFERS
+private:
 	// Buffers to hold actual geometry data
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;

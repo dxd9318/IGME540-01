@@ -25,10 +25,7 @@ private:
 
 	// Initialization helper methods - feel free to customize, combine, etc.
 	void LoadShaders(); 
-	void CreateBasicGeometry();
-
-	
-	Mesh tempMeshObject_RENAME_LATER;	// WILL NEED TO ALLOCATE HERE TO FEED IN PARAMS... FIND WHERE TO DEALLOCATE -- MEMORY LEAK WILL OCCUR OTHERWISE
+	//void CreateBasicGeometry();
 
 	// Note the usage of ComPtr below
 	//  - This is a smart pointer for objects that abide by the
@@ -38,6 +35,13 @@ private:
 	//// Buffers to hold actual geometry data
 	//Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
 	//Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
+
+	// Mesh objects
+	Mesh* tempMeshObject_RENAME_LATER = nullptr;
+	/*
+		Start by creating 3 private Mesh pointer variables in Game.h.
+		You’ll need to create them using new, and delete them in the Game destructor.
+	*/
 
 	// Shaders and shader-related constructs
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;

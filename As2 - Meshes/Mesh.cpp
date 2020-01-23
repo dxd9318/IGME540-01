@@ -100,17 +100,8 @@ Mesh::Mesh(Vertex* vertArray, int vertsInArray, int* indxArray, int indxsInArray
 
 Mesh::~Mesh() {}
 
-Microsoft::WRL::ComPtr<ID3D11Buffer> Mesh::GetVertexBuffer() 
-{
-	return vertexBuffer;
-}
+Microsoft::WRL::ComPtr<ID3D11Buffer> Mesh::GetVertexBuffer() { return vertexBuffer; }
 
-Microsoft::WRL::ComPtr<ID3D11Buffer> Mesh::GetIndexBuffer() 
-{
-	return indexBuffer;
-}
+Microsoft::WRL::ComPtr<ID3D11Buffer> Mesh::GetIndexBuffer() { return indexBuffer; }
 
-int Mesh::GetIndexCount() 
-{
-	return indexCount;
-}
+int Mesh::GetIndexCount() { return indexCount; }
