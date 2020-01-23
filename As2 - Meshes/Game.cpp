@@ -53,8 +53,8 @@ Game::~Game()
 	delete rectangleMesh;
 	rectangleMesh = nullptr;
 
-	/*delete circleMesh;
-	circleMesh = nullptr;*/
+	delete circleMesh;
+	circleMesh = nullptr;
 }
 
 // --------------------------------------------------------
@@ -100,16 +100,54 @@ void Game::Init()
 	rectangleMesh = new Mesh(rectangleVertices, 4, rectangleIndices, 6, device);
 
 
-	//// Mesh object 3 - Circle (12 triangles, 13 vertices)
-	//Vertex circleVertices[] =
-	//{
-	//	{ XMFLOAT3(+0.0f, +0.5f, +0.0f), red },
-	//	{ XMFLOAT3(+0.5f, -0.5f, +0.0f), blue },
-	//	{ XMFLOAT3(-0.5f, -0.5f, +0.0f), green },
-	//	// will need to add a lot more points and colors
-	//};
-	//int circleIndices[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-	//circleMesh = new Mesh(circleVertices, 13, circleIndices, 13, device);
+	// Mesh object 3 - Circle (12 triangles, 13 vertices)
+	Vertex circleVertices[] =
+	{
+		{ XMFLOAT3(+0.0f, +0.0f, +0.0f), green },	// 0 - Center
+		{ XMFLOAT3(+0.0f, +0.5f, +0.0f), red },		// 1 - Top
+		{ XMFLOAT3(,, +0.0f), blue },
+		{ XMFLOAT3(,, +0.0f), red },
+		{ XMFLOAT3(+0.5f, +0.0f, +0.0f), blue },	// 4 - Right
+		{ XMFLOAT3(,, +0.0f), red },
+		{ XMFLOAT3(,, +0.0f), blue },
+		{ XMFLOAT3(+0.0f, -0.5f, +0.0f), red },		// 7 - Bottom
+		{ XMFLOAT3(,, +0.0f), blue },
+		{ XMFLOAT3(,, +0.0f), red },
+		{ XMFLOAT3(-0.5f, +0.0f, +0.0f), blue },	// 10 - Left
+		{ XMFLOAT3(,, +0.0f), red },
+		{ XMFLOAT3(,, +0.0f), blue },
+
+		/*
+			X = cosine of angle
+			Y = sine of angle
+			r = 0.5;
+
+			(2*pi*r)/12 -> pi*r/6
+
+			increment slices by pi*r/6
+
+			//https://docs.microsoft.com/en-us/windows/win32/dxmath/ovw-xnamath-reference-functions-scalar
+
+			XMScalarSin - computes sine of radian angle
+			XMScalarCos - computes the cosine of radian angle
+			
+		*/
+	};
+	int circleIndices[] = { 
+		0, 1, 2,
+		0, 2, 3,
+		0, 3, 4,
+		0, 4, 5,
+		0, 5, 6,
+		0, 6, 7,
+		0, 7, 8,
+		0, 8, 9,
+		0, 9, 10,
+		0, 10, 11,
+		0, 11, 12,
+		0, 12, 1,
+	};
+	circleMesh = new Mesh(circleVertices, 13, circleIndices, 36, device);
 
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -361,13 +399,13 @@ void Game::Draw(float deltaTime, float totalTime)
 		0);    // Offset to add to each index when looking up vertices
 
 
-	//// Mesh object 3
-	//context->IASetVertexBuffers(0, 1, circleMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
-	//context->IASetIndexBuffer(circleMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
-	//context->DrawIndexed(
-	//	circleMesh->GetIndexCount(),	// The number of indices to use (we could draw a subset if we wanted)
-	//	0,     // Offset to the first index we want to use
-	//	0);    // Offset to add to each index when looking up vertices
+	// Mesh object 3
+	context->IASetVertexBuffers(0, 1, circleMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
+	context->IASetIndexBuffer(circleMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	context->DrawIndexed(
+		circleMesh->GetIndexCount(),	// The number of indices to use (we could draw a subset if we wanted)
+		0,     // Offset to the first index we want to use
+		0);    // Offset to add to each index when looking up vertices
 
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

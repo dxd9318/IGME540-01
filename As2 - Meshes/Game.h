@@ -43,7 +43,7 @@ private:
 	// Mesh objects
 	Mesh* triangleMesh = nullptr;
 	Mesh* rectangleMesh = nullptr;
-	//Mesh* circleMesh = nullptr;
+	Mesh* circleMesh = nullptr;
 
 	// Shaders and shader-related constructs
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
