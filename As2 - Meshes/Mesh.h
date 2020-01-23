@@ -4,6 +4,10 @@
 #include <wrl/client.h> // Used for ComPtr - a smart pointer for COM objects
 #include "Vertex.h"
 
+/*
+	A class specifically designed to create and keep track of geometry.
+	Creates the requisite vertex and index buffers, but other than the constructor it’s just a dumb container for that data.
+*/
 class Mesh 
 {
 public:

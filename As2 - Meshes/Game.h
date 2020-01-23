@@ -25,19 +25,23 @@ private:
 
 	// Initialization helper methods - feel free to customize, combine, etc.
 	void LoadShaders(); 
-	//void CreateBasicGeometry();
+	/*
+		The following code and functionality was moved to the Mesh class.
 
-	// Note the usage of ComPtr below
-	//  - This is a smart pointer for objects that abide by the
-	//    Component Object Mode, which DirectX objects do
-	//  - More info here: https://github.com/Microsoft/DirectXTK/wiki/ComPtr
+		//void CreateBasicGeometry();
 
-	//// Buffers to hold actual geometry data
-	//Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
-	//Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
+		//// Note the usage of ComPtr below
+		////  - This is a smart pointer for objects that abide by the
+		////    Component Object Mode, which DirectX objects do
+		////  - More info here: https://github.com/Microsoft/DirectXTK/wiki/ComPtr
+
+		//// Buffers to hold actual geometry data
+		//Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
+		//Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
+	*/
 
 	// Mesh objects
-	Mesh* tempMeshObject_RENAME_LATER = nullptr;
+	Mesh* myTempMesh = nullptr;
 	/*
 		Start by creating 3 private Mesh pointer variables in Game.h.
 		You’ll need to create them using new, and delete them in the Game destructor.
@@ -47,6 +51,5 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
-
 };
 
