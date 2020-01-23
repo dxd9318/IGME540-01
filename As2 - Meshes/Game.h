@@ -41,11 +41,9 @@ private:
 	*/
 
 	// Mesh objects
-	Mesh* myTempMesh = nullptr;
-	/*
-		Start by creating 3 private Mesh pointer variables in Game.h.
-		You’ll need to create them using new, and delete them in the Game destructor.
-	*/
+	Mesh* triangleMesh = nullptr;
+	Mesh* rectangleMesh = nullptr;
+	//Mesh* circleMesh = nullptr;
 
 	// Shaders and shader-related constructs
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;

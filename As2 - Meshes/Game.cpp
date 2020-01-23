@@ -47,8 +47,14 @@ Game::~Game()
 
 
 	// RELEASE MESH POINTERS HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-	delete myTempMesh;
-	myTempMesh = nullptr;
+	delete triangleMesh;
+	triangleMesh = nullptr;
+
+	delete rectangleMesh;
+	rectangleMesh = nullptr;
+
+	/*delete circleMesh;
+	circleMesh = nullptr;*/
 }
 
 // --------------------------------------------------------
@@ -71,21 +77,39 @@ void Game::Init()
 	XMFLOAT4 green = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 	XMFLOAT4 blue = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 
-	// Mesh object 1	
-	Vertex vertices[] =
+	// Mesh object 1 - Basic Triangle	// REMEMBER, CLOCKWISE!!!
+	Vertex triangleVertices[] =
 	{
-		{ XMFLOAT3(+0.0f, +0.5f, +0.0f), red },
-		{ XMFLOAT3(+0.5f, -0.5f, +0.0f), blue },
-		{ XMFLOAT3(-0.5f, -0.5f, +0.0f), green },
+		{ XMFLOAT3(-0.75f, +1.0f, +0.0f), red },
+		{ XMFLOAT3(-0.5f, +0.5f, +0.0f), blue },
+		{ XMFLOAT3(-1.0f, +0.5f, +0.0f), green },
 	};
-	int indices[] = { 0, 1, 2 };
-	myTempMesh = new Mesh(vertices, 3, indices, 3, device);
-
-	// Mesh object 2
+	int triangleIndices[] = { 0, 1, 2 };
+	triangleMesh = new Mesh(triangleVertices, 3, triangleIndices, 3, device);
 
 
-	// Mesh object 3
+	// Mesh object 2 - Rectangle
+	Vertex rectangleVertices[] =
+	{
+		{ XMFLOAT3(+0.5f, +1.0f, +0.0f), red },
+		{ XMFLOAT3(+1.0f, +1.0f, +0.0f), blue },
+		{ XMFLOAT3(+1.0f, +0.5f, +0.0f), red },
+		{ XMFLOAT3(+0.5f, +0.5f, +0.0f), green },
+	};
+	int rectangleIndices[] = { 0, 1, 2, 0, 2, 3 };	//0, 1, 2	//0, 2, 3
+	rectangleMesh = new Mesh(rectangleVertices, 4, rectangleIndices, 6, device);
 
+
+	//// Mesh object 3 - Circle (12 triangles, 13 vertices)
+	//Vertex circleVertices[] =
+	//{
+	//	{ XMFLOAT3(+0.0f, +0.5f, +0.0f), red },
+	//	{ XMFLOAT3(+0.5f, -0.5f, +0.0f), blue },
+	//	{ XMFLOAT3(-0.5f, -0.5f, +0.0f), green },
+	//	// will need to add a lot more points and colors
+	//};
+	//int circleIndices[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+	//circleMesh = new Mesh(circleVertices, 13, circleIndices, 13, device);
 
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -314,8 +338,8 @@ void Game::Draw(float deltaTime, float totalTime)
 	UINT offset = 0;
 
 	// Mesh object 1
-	context->IASetVertexBuffers(0, 1, myTempMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
-	context->IASetIndexBuffer(myTempMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	context->IASetVertexBuffers(0, 1, triangleMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
+	context->IASetIndexBuffer(triangleMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	// Finally do the actual drawing
 	//  - Do this ONCE PER OBJECT you intend to draw
@@ -323,25 +347,25 @@ void Game::Draw(float deltaTime, float totalTime)
 	//  - DrawIndexed() uses the currently set INDEX BUFFER to look up corresponding
 	//     vertices in the currently set VERTEX BUFFER
 	context->DrawIndexed(
-		myTempMesh->GetIndexCount(),    //3, // The number of indices to use (we could draw a subset if we wanted)
+		triangleMesh->GetIndexCount(),    //3, // The number of indices to use (we could draw a subset if we wanted)
 		0,     // Offset to the first index we want to use
 		0);    // Offset to add to each index when looking up vertices
 
 
 	// Mesh object 2
-	//context->IASetVertexBuffers(0, 1, myTempMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
-	//context->IASetIndexBuffer(myTempMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
-	//context->DrawIndexed(
-	//	myTempMesh->GetIndexCount(),	// The number of indices to use (we could draw a subset if we wanted)
-	//	0,     // Offset to the first index we want to use
-	//	0);    // Offset to add to each index when looking up vertices
+	context->IASetVertexBuffers(0, 1, rectangleMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
+	context->IASetIndexBuffer(rectangleMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	context->DrawIndexed(
+		rectangleMesh->GetIndexCount(),	// The number of indices to use (we could draw a subset if we wanted)
+		0,     // Offset to the first index we want to use
+		0);    // Offset to add to each index when looking up vertices
 
 
-	// Mesh object 3
-	//context->IASetVertexBuffers(0, 1, myTempMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
-	//context->IASetIndexBuffer(myTempMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	//// Mesh object 3
+	//context->IASetVertexBuffers(0, 1, circleMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
+	//context->IASetIndexBuffer(circleMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 	//context->DrawIndexed(
-	//	myTempMesh->GetIndexCount(),	// The number of indices to use (we could draw a subset if we wanted)
+	//	circleMesh->GetIndexCount(),	// The number of indices to use (we could draw a subset if we wanted)
 	//	0,     // Offset to the first index we want to use
 	//	0);    // Offset to add to each index when looking up vertices
 
