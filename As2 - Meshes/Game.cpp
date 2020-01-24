@@ -99,11 +99,12 @@ void Game::Init()
 	int rectangleIndices[] = { 0, 1, 2, 0, 2, 3 };	//0, 1, 2	//0, 2, 3
 	rectangleMesh = new Mesh(rectangleVertices, 4, rectangleIndices, 6, device);
 
+	
+	// Mesh object 3 - Circle (12 triangles, 13 vertices)
 	// variables for some trig values for repeated use, and readability
 	float cosPiOverThree = XMScalarCos(XM_PI / 3);	// Value = (1/2)
 	float sinPiOverThree = XMScalarSin(XM_PI / 3);	// Value = (sqrt(3)/2)
 
-	// Mesh object 3 - Circle (12 triangles, 13 vertices)
 	Vertex circleVertices[] =
 	{
 		{ XMFLOAT3(+0.0f, +0.0f, +0.0f), green },	// 0 - Center
