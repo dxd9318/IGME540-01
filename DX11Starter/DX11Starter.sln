@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DX11Starter", "DX11Starter.vcxproj", "{7B07137C-8E03-4F0C-BEDA-4C9915CD667C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "As2 - Meshes", "..\As2 - Meshes\As2 - Meshes.vcxproj", "{BE3E39C5-423C-48A3-A2EB-2DDAA2FEA151}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,14 +21,6 @@ Global
 		{7B07137C-8E03-4F0C-BEDA-4C9915CD667C}.Release|x64.Build.0 = Release|x64
 		{7B07137C-8E03-4F0C-BEDA-4C9915CD667C}.Release|x86.ActiveCfg = Release|Win32
 		{7B07137C-8E03-4F0C-BEDA-4C9915CD667C}.Release|x86.Build.0 = Release|Win32
-		{BE3E39C5-423C-48A3-A2EB-2DDAA2FEA151}.Debug|x64.ActiveCfg = Debug|x64
-		{BE3E39C5-423C-48A3-A2EB-2DDAA2FEA151}.Debug|x64.Build.0 = Debug|x64
-		{BE3E39C5-423C-48A3-A2EB-2DDAA2FEA151}.Debug|x86.ActiveCfg = Debug|Win32
-		{BE3E39C5-423C-48A3-A2EB-2DDAA2FEA151}.Debug|x86.Build.0 = Debug|Win32
-		{BE3E39C5-423C-48A3-A2EB-2DDAA2FEA151}.Release|x64.ActiveCfg = Release|x64
-		{BE3E39C5-423C-48A3-A2EB-2DDAA2FEA151}.Release|x64.Build.0 = Release|x64
-		{BE3E39C5-423C-48A3-A2EB-2DDAA2FEA151}.Release|x86.ActiveCfg = Release|Win32
-		{BE3E39C5-423C-48A3-A2EB-2DDAA2FEA151}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
