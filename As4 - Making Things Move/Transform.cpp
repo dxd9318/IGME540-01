@@ -1,0 +1,73 @@
+#include "Transform.h"
+
+// Constructor
+Transform::Transform() 
+{
+	// Initialize transform values and world matrix
+	transformPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	transformScale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+	transformRotation = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+	XMStoreFloat4x4(&transformWorldMatrix, DirectX::XMMatrixIdentity());
+}
+
+// Destructor
+Transform::~Transform() 
+{
+
+}
+
+// Setters
+void Transform::SetPosition(float x, float y, float z) 
+{
+	transformPosition = DirectX::XMFLOAT3(x, y, z);
+}
+
+void Transform::SetRotation(float pitch, float yaw, float roll) 
+{
+	transformRotation = DirectX::XMFLOAT3(pitch, yaw, roll);
+}
+
+void Transform::SetScale(float x, float y, float z) 
+{
+	transformScale = DirectX::XMFLOAT3(x, y, z);
+}
+
+// Getters
+DirectX::XMFLOAT3 Transform::GetPosition() { return transformPosition; }
+
+DirectX::XMFLOAT3 Transform::GetPitchYawRoll() { return transformRotation; }
+
+DirectX::XMFLOAT3 Transform::GetScale() { return transformScale; }
+
+DirectX::XMFLOAT4X4 Transform::GetWorldMatrix() 
+{
+	// TODO: create worldMatrix if and when necessary
+
+	return transformWorldMatrix;
+}
+
+// Transformers
+void Transform::MoveAbsolute(float x, float y, float z) 
+{
+	transformPosition = DirectX::XMFLOAT3(
+		transformPosition.x + x, 
+		transformPosition.y + y, 
+		transformPosition.z + z);
+}
+
+void Transform::Rotate(float pitch, float yaw, float roll) 
+{
+	transformRotation = DirectX::XMFLOAT3(
+		transformRotation.x + pitch,
+		transformRotation.y + yaw,
+		transformRotation.z + roll);
+}
+
+void Transform::Scale(float x, float y, float z) 
+{
+	transformScale = DirectX::XMFLOAT3(
+		transformScale.x * x,
+		transformScale.y * y,
+		transformScale.z * z);
+}
