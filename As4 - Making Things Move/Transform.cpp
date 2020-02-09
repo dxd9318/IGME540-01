@@ -42,7 +42,27 @@ DirectX::XMFLOAT3 Transform::GetScale() { return transformScale; }
 
 DirectX::XMFLOAT4X4 Transform::GetWorldMatrix() 
 {
-	// TODO: create worldMatrix if and when necessary
+	// TODO: create worldMatrix ONLY if and when necessary
+
+	DirectX::XMMATRIX tempTranslation = DirectX::XMMatrixTranslation(
+		transformPosition.x, 
+		transformPosition.y, 
+		transformPosition.z);
+
+	DirectX::XMMATRIX tempRotation = DirectX::XMMatrixRotationRollPitchYaw(
+		transformRotation.x,	// pitch
+		transformRotation.y,	// yaw
+		transformRotation.z);	// roll
+
+	DirectX::XMMATRIX tempScale = DirectX::XMMatrixScaling(
+		transformScale.x, 
+		transformScale.y, 
+		transformScale.z);
+
+	// Applies translation, then rotation, then scale (matrix math)
+	DirectX::XMMATRIX tempWorld = tempScale * tempRotation * tempTranslation;
+
+	DirectX::XMStoreFloat4x4(&transformWorldMatrix, tempWorld);
 
 	return transformWorldMatrix;
 }
