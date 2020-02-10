@@ -400,7 +400,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	// Assigning data to Constant Buffer for Vertex Shader
 	VertexShaderExternalData vsData;
 	vsData.colorTint	= XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);
-	vsData.offset		= XMFLOAT3(0.25f, 0.0f, 0.0f);
+	vsData.offset		= XMFLOAT3(0.25f, 0.0f, 0.0f);	// REPLACE WITH vsData.worldMatrix = transformPtr->GetWorldMatrix();
 
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
 	context->Map(vsConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
