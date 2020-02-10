@@ -18,6 +18,8 @@ private:
 	DirectX::XMFLOAT3 transformScale;
 	DirectX::XMFLOAT3 transformRotation;
 
+	bool matrixDirty; // if any transform field is updated, this will too to signal the matrix to update
+
 	// Setters
 	void SetPosition(float x, float y, float z);
 	void SetRotation(float pitch, float yaw, float roll);
