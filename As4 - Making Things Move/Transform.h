@@ -12,14 +12,6 @@ public:
 	DirectX::XMFLOAT3 GetScale();
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
 
-private:
-	DirectX::XMFLOAT4X4 transformWorldMatrix; // represents entity's current position, rotation and scale.
-	DirectX::XMFLOAT3 transformPosition;
-	DirectX::XMFLOAT3 transformScale;
-	DirectX::XMFLOAT3 transformRotation;
-
-	bool matrixDirty; // if any transform field is updated, this will too to signal the matrix to update
-
 	// Setters
 	void SetPosition(float x, float y, float z);
 	void SetRotation(float pitch, float yaw, float roll);
@@ -29,4 +21,14 @@ private:
 	void MoveAbsolute(float x, float y, float z);
 	void Rotate(float pitch, float yaw, float roll);
 	void Scale(float x, float y, float z);
+
+private:
+	DirectX::XMFLOAT4X4 transformWorldMatrix; // represents entity's current position, rotation and scale.
+	DirectX::XMFLOAT3 transformPosition;
+	DirectX::XMFLOAT3 transformScale;
+	DirectX::XMFLOAT3 transformRotation;
+
+	bool matrixDirty; // if any transform field is updated, this will too to signal the matrix to update
+
+	
 };

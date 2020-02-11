@@ -379,6 +379,25 @@ void Game::Update(float deltaTime, float totalTime)
 	// Quit if the escape key is pressed
 	if (GetAsyncKeyState(VK_ESCAPE))
 		Quit();
+
+	// scale triangle 1
+	entityVector[0]->GetTransform()->SetScale(0.5f, 0.5f, 1.0f);
+
+	// move rectangle 1 up and down
+	entityVector[1]->GetTransform()->SetPosition(0.0f, 1.0f, 0.0f);
+
+	// move rect 2 left and right
+	entityVector[2]->GetTransform()->SetScale(3.0f, 0.5f, 1.0f);
+
+	// rotate circle 1 at center
+	entityVector[4]->GetTransform()->SetScale(0.25f, 0.25f, 1.0f);
+	static int rotateAngle = 0;
+	entityVector[3]->GetTransform()->SetRotation(0.0f, 0.0f, rotateAngle);
+	rotateAngle = (rotateAngle + 1) % 360;
+
+
+	// scale circle 2 down and move right slowly
+	entityVector[4]->GetTransform()->SetScale(3, 0.5, 1);
 }
 
 // --------------------------------------------------------
