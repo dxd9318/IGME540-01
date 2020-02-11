@@ -3,7 +3,7 @@
 // Constructor
 GameEntity::GameEntity(Mesh* inputMesh)
 {
-	Mesh* entityMesh = inputMesh;
+	entityMesh = inputMesh;
 }
 
 // Destructor

@@ -413,7 +413,6 @@ void Game::Draw(float deltaTime, float totalTime)
 	// - However, this isn't always the case (but might be for this course)
 	context->IASetInputLayout(inputLayout.Get());
 
-	// REPLACE WITH DRAWING BY ENTITY, LOOP THROUGH VECTOR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Set buffers in the input assembler
 	//  - Do this ONCE PER OBJECT you're drawing, since each object might
@@ -424,27 +423,64 @@ void Game::Draw(float deltaTime, float totalTime)
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 
-	// Mesh object 1
-	context->IASetVertexBuffers(0, 1, triangleMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
-	context->IASetIndexBuffer(triangleMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+	VertexShaderExternalData vsData; // For assigning data to cbuffer for VS in the following loop
 
-	// Assigning data to Constant Buffer for Vertex Shader
-	VertexShaderExternalData vsData;
-	vsData.colorTint	= XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);
-	vsData.offset		= XMFLOAT3(0.25f, 0.0f, 0.0f);	// REPLACE WITH vsData.worldMatrix = transformPtr->GetWorldMatrix(); 
+	// REPLACE WITH DRAWING BY ENTITY, LOOP THROUGH VECTOR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	for (int i = 0; i < entityVector.size(); i++) 
+	{
+		context->IASetVertexBuffers(0, 1, entityVector[i]->GetMesh()->GetVertexBuffer().GetAddressOf(), &stride, &offset);
+		context->IASetIndexBuffer(entityVector[i]->GetMesh()->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
-	context->Map(vsConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
+		// Assigning data to Constant Buffer for Vertex Shader
+		vsData.colorTint = XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);
+		vsData.worldMatrix = entityVector[i]->GetTransform()->GetWorldMatrix();
 
-	memcpy(mappedBuffer.pData, &vsData, sizeof(vsData));
-	
-	context->Unmap(vsConstantBuffer.Get(), 0);
+		D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
+		context->Map(vsConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
 
-	context->VSSetConstantBuffers(
-		0,		// Which slot (register) to bind the buffer to?
-		1,		// How many are we activating? Can do multiple at once
-		vsConstantBuffer.GetAddressOf()	// Array of buffers (or the address of one)
-	);
+		memcpy(mappedBuffer.pData, &vsData, sizeof(vsData));
+
+		context->Unmap(vsConstantBuffer.Get(), 0);
+
+		context->VSSetConstantBuffers(
+			0,		// Which slot (register) to bind the buffer to?
+			1,		// How many are we activating? Can do multiple at once
+			vsConstantBuffer.GetAddressOf()	// Array of buffers (or the address of one)
+		);
+
+		// Finally, do the actual drawing
+		//  - Do this ONCE PER OBJECT you intend to draw
+		//  - This will use all of the currently set DirectX "stuff" (shaders, buffers, etc)
+		//  - DrawIndexed() uses the currently set INDEX BUFFER to look up corresponding
+		//     vertices in the currently set VERTEX BUFFER
+
+		context->DrawIndexed(
+			entityVector[i]->GetMesh()->GetIndexCount(), // The number of indices to use (we could draw a subset if we wanted)
+			0,     // Offset to the first index we want to use
+			0);    // Offset to add to each index when looking up vertices
+	}
+
+	//// Mesh object 1
+	//context->IASetVertexBuffers(0, 1, triangleMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
+	//context->IASetIndexBuffer(triangleMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+
+	//// Assigning data to Constant Buffer for Vertex Shader
+	//VertexShaderExternalData vsData;
+	//vsData.colorTint	= XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);
+	//vsData.offset		= XMFLOAT3(0.25f, 0.0f, 0.0f);	// REPLACE WITH vsData.worldMatrix = transformPtr->GetWorldMatrix(); 
+
+	//D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
+	//context->Map(vsConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
+
+	//memcpy(mappedBuffer.pData, &vsData, sizeof(vsData));
+	//
+	//context->Unmap(vsConstantBuffer.Get(), 0);
+
+	//context->VSSetConstantBuffers(
+	//	0,		// Which slot (register) to bind the buffer to?
+	//	1,		// How many are we activating? Can do multiple at once
+	//	vsConstantBuffer.GetAddressOf()	// Array of buffers (or the address of one)
+	//);
 
 
 	// Finally do the actual drawing
@@ -452,12 +488,12 @@ void Game::Draw(float deltaTime, float totalTime)
 	//  - This will use all of the currently set DirectX "stuff" (shaders, buffers, etc)
 	//  - DrawIndexed() uses the currently set INDEX BUFFER to look up corresponding
 	//     vertices in the currently set VERTEX BUFFER
-	context->DrawIndexed(
-		triangleMesh->GetIndexCount(),    //3, // The number of indices to use (we could draw a subset if we wanted)
-		0,     // Offset to the first index we want to use
-		0);    // Offset to add to each index when looking up vertices
+	//context->DrawIndexed(
+	//	triangleMesh->GetIndexCount(),    //3, // The number of indices to use (we could draw a subset if we wanted)
+	//	0,     // Offset to the first index we want to use
+	//	0);    // Offset to add to each index when looking up vertices
 
-
+	/*
 	// Mesh object 2
 	context->IASetVertexBuffers(0, 1, rectangleMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 	context->IASetIndexBuffer(rectangleMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
@@ -474,6 +510,8 @@ void Game::Draw(float deltaTime, float totalTime)
 		circleMesh->GetIndexCount(),	// The number of indices to use (we could draw a subset if we wanted)
 		0,     // Offset to the first index we want to use
 		0);    // Offset to add to each index when looking up vertices
+	*/
+
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	// Present the back buffer to the user
