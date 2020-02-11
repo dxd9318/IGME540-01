@@ -46,6 +46,24 @@ Game::~Game()
 	//   to call Release() on each DirectX object
 
 
+	// RELEASE GAMEENTITIES HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	delete triangleEntity_01;
+	triangleEntity_01 = nullptr;
+
+	delete squareEntity_01;
+	squareEntity_01 = nullptr;
+
+	delete squareEntity_02;
+	squareEntity_02 = nullptr;
+
+	delete circleEntity_01;
+	circleEntity_01 = nullptr;
+
+	delete circleEntity_02;
+	circleEntity_02 = nullptr;
+
+	entityVector.clear();
+
 	// RELEASE MESH POINTERS HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	delete triangleMesh;
 	triangleMesh = nullptr;
@@ -69,8 +87,7 @@ void Game::Init()
 	LoadShaders();
 	//CreateBasicGeometry();	// Functionality of this method moved to Mesh class
 
-	// Initialize Mesh pointer objects here.
-	
+	// Initialize Mesh pointer objects here
 	// Create some temporary variables to represent colors
 	XMFLOAT4 red = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	XMFLOAT4 green = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
@@ -151,6 +168,20 @@ void Game::Init()
 		0, 12, 1,
 	};
 	circleMesh = new Mesh(circleVertices, 13, circleIndices, 36, device);
+
+	// Create and store entities
+	triangleEntity_01 = new GameEntity(triangleMesh);
+	squareEntity_01 = new GameEntity(rectangleMesh);
+	squareEntity_02 = new GameEntity(rectangleMesh);
+	circleEntity_01 = new GameEntity(circleMesh);
+	circleEntity_02 = new GameEntity(circleMesh);
+
+	entityVector.push_back(triangleEntity_01);
+	entityVector.push_back(squareEntity_01);
+	entityVector.push_back(squareEntity_02);
+	entityVector.push_back(circleEntity_01);
+	entityVector.push_back(circleEntity_02);
+
 
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives (points, lines or triangles) we want to draw.  
@@ -382,7 +413,8 @@ void Game::Draw(float deltaTime, float totalTime)
 	// - However, this isn't always the case (but might be for this course)
 	context->IASetInputLayout(inputLayout.Get());
 
-
+	// REPLACE WITH DRAWING BY ENTITY, LOOP THROUGH VECTOR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Set buffers in the input assembler
 	//  - Do this ONCE PER OBJECT you're drawing, since each object might
 	//    have different geometry.
@@ -396,11 +428,10 @@ void Game::Draw(float deltaTime, float totalTime)
 	context->IASetVertexBuffers(0, 1, triangleMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 	context->IASetIndexBuffer(triangleMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Assigning data to Constant Buffer for Vertex Shader
 	VertexShaderExternalData vsData;
 	vsData.colorTint	= XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);
-	vsData.offset		= XMFLOAT3(0.25f, 0.0f, 0.0f);	// REPLACE WITH vsData.worldMatrix = transformPtr->GetWorldMatrix();
+	vsData.offset		= XMFLOAT3(0.25f, 0.0f, 0.0f);	// REPLACE WITH vsData.worldMatrix = transformPtr->GetWorldMatrix(); 
 
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
 	context->Map(vsConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
@@ -414,7 +445,6 @@ void Game::Draw(float deltaTime, float totalTime)
 		1,		// How many are we activating? Can do multiple at once
 		vsConstantBuffer.GetAddressOf()	// Array of buffers (or the address of one)
 	);
-	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 	// Finally do the actual drawing
@@ -444,7 +474,7 @@ void Game::Draw(float deltaTime, float totalTime)
 		circleMesh->GetIndexCount(),	// The number of indices to use (we could draw a subset if we wanted)
 		0,     // Offset to the first index we want to use
 		0);    // Offset to add to each index when looking up vertices
-
+	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	// Present the back buffer to the user
 	//  - Puts the final frame we're drawing into the window so the user can see it

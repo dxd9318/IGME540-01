@@ -3,8 +3,9 @@
 #include "DXCore.h"
 #include <DirectXMath.h>
 #include <wrl/client.h> // Used for ComPtr - a smart pointer for COM objects
-
-#include "Mesh.h"	// Geometry data will be held in the mesh class, so Game will need to pull from it
+#include <vector>
+#include "GameEntity.h"
+//#include "Mesh.h"	// Geometry data will be held in the mesh class, so Game will need to pull from it
 #include "BufferStructs.h"
 
 class Game 
@@ -45,6 +46,13 @@ private:
 	Mesh* triangleMesh = nullptr;
 	Mesh* rectangleMesh = nullptr;
 	Mesh* circleMesh = nullptr;
+
+	GameEntity* triangleEntity_01 = nullptr;
+	GameEntity* squareEntity_01 = nullptr;
+	GameEntity* squareEntity_02 = nullptr;
+	GameEntity* circleEntity_01 = nullptr;
+	GameEntity* circleEntity_02 = nullptr;
+	std::vector<GameEntity*> entityVector = {};
 
 	// Shaders and shader-related constructs
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;

@@ -34,7 +34,6 @@ Transform* GameEntity::GetTransform()
 	return &entityTransform; 
 }
 
-void GameEntity::Draw(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context, Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer)
-{
-	// TODO:
-}
+//void GameEntity::Draw(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context, Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer)
+//{
+//}
