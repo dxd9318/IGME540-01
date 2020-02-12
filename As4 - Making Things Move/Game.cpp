@@ -380,24 +380,32 @@ void Game::Update(float deltaTime, float totalTime)
 	if (GetAsyncKeyState(VK_ESCAPE))
 		Quit();
 
-	// scale triangle 1
-	entityVector[0]->GetTransform()->SetScale(0.5f, 0.5f, 1.0f);
+	// triangle 1
+	entityVector[0]->GetTransform()->SetScale(0.5f, 0.75f, 1.0f);
 
-	// move rectangle 1 up and down
-	entityVector[1]->GetTransform()->SetPosition(0.0f, 1.0f, 0.0f);
+	// rectangle 1
+	entityVector[1]->GetTransform()->SetPosition(0.0f, -1.0f, 0.0f);
+	entityVector[1]->GetTransform()->SetRotation(0.0f, 0.0f, 45.0f);
+	entityVector[1]->GetTransform()->SetScale(0.25f, 0.25f, 1.0f);
 
-	// move rect 2 left and right
-	entityVector[2]->GetTransform()->SetScale(3.0f, 0.5f, 1.0f);
+	// rect 2
+	static float decrementX = 0;
+	entityVector[2]->GetTransform()->SetPosition(decrementX, 0.0f, 0.0f);
+	decrementX -= 0.000005f;
+	entityVector[2]->GetTransform()->SetScale(1.0f, 0.5f, 1.0f);
 
-	// rotate circle 1 at center
-	entityVector[4]->GetTransform()->SetScale(0.25f, 0.25f, 1.0f);
+	// circle 1
+	entityVector[3]->GetTransform()->SetPosition(0.5f, -0.75f, 0.0f);
+	entityVector[3]->GetTransform()->SetScale(0.15f, 0.15f, 1.0f);
 	static int rotateAngle = 0;
 	entityVector[3]->GetTransform()->SetRotation(0.0f, 0.0f, rotateAngle);
 	rotateAngle = (rotateAngle + 1) % 360;
 
+	// circle 2 
+	float scaleChange = sin(rotateAngle) / 10;
+	entityVector[4]->GetTransform()->SetPosition(0.75f, 0.75f, 0.0f);
+	entityVector[4]->GetTransform()->SetScale(scaleChange, scaleChange, 1.0f);
 
-	// scale circle 2 down and move right slowly
-	entityVector[4]->GetTransform()->SetScale(3, 0.5, 1);
 }
 
 // --------------------------------------------------------
