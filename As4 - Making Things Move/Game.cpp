@@ -385,7 +385,7 @@ void Game::Update(float deltaTime, float totalTime)
 
 	// rectangle 1
 	entityVector[1]->GetTransform()->SetPosition(0.0f, -1.0f, 0.0f);
-	entityVector[1]->GetTransform()->SetRotation(0.0f, 0.0f, 45.0f);
+	entityVector[1]->GetTransform()->SetRotation(0.0f, 0.0f, XM_PIDIV4);
 	entityVector[1]->GetTransform()->SetScale(0.25f, 0.25f, 1.0f);
 
 	// rect 2
@@ -397,9 +397,9 @@ void Game::Update(float deltaTime, float totalTime)
 	// circle 1
 	entityVector[3]->GetTransform()->SetPosition(0.5f, -0.75f, 0.0f);
 	entityVector[3]->GetTransform()->SetScale(0.15f, 0.15f, 1.0f);
-	static int rotateAngle = 0;
+	static float rotateAngle = 0;
 	entityVector[3]->GetTransform()->SetRotation(0.0f, 0.0f, rotateAngle);
-	rotateAngle = (rotateAngle + 1) % 360;
+	rotateAngle += XM_PI/20000;
 
 	// circle 2 
 	float scaleChange = sin(rotateAngle) / 10;
