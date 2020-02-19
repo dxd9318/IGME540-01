@@ -1,13 +1,20 @@
 #include "Camera.h"
 
-Camera::Camera() 
+Camera::Camera(DirectX::XMFLOAT3 initCamPos, DirectX::XMFLOAT3 initCamOri, float aspRat, float fov, float nearPlane, float farPlane, float moveSpd, float lookSpd)
 {
 	//init position, and orientation
+	cameraTransform.SetPosition(initCamPos.x, initCamPos.y, initCamPos.z);
+	cameraTransform.SetRotation(initCamOri.x, initCamOri.y, initCamOri.z);
 
-	//init aspect ratio, fov, near/far plane, movement speed and mouse look speed
+	//init other customization options
+	fovAngle = fov;
+	nearPlaneDistance = nearPlane;
+	farPlaneDistance = farPlane;
+	movementSpeed = moveSpd;
+	mouseLookSpeed = lookSpd;
 
 	//UpdateViewMatrix();
-	//UpdatePorjectionMatrix();
+	//UpdateProjectionMatrix();
 }
 
 Camera::~Camera() 
