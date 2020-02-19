@@ -24,9 +24,7 @@ public:
 
 	// Relative
 	void MoveRelative(float x, float y, float z);
-	DirectX::XMVECTOR currentDirection;
-	DirectX::XMVECTOR currentRotation;
-	DirectX::XMFLOAT3 relativePosition;
+	
 
 private:
 	DirectX::XMFLOAT4X4 transformWorldMatrix; // represents entity's current position, rotation and scale.

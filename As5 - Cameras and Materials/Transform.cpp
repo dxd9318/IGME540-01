@@ -11,10 +11,6 @@ Transform::Transform()
 	XMStoreFloat4x4(&transformWorldMatrix, DirectX::XMMatrixIdentity());
 
 	matrixDirty = false;
-
-	currentDirection = DirectX::XMVECTOR();
-	currentRotation = DirectX::XMVECTOR();
-	relativePosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 }
 
 // Destructor
@@ -108,13 +104,16 @@ void Transform::Scale(float x, float y, float z)
 
 void Transform::MoveRelative(float x, float y, float z) 
 {
-	// NOT SURE ABOUT THE CURRENT ROTATION PARAMETERS
-	currentDirection = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);		// world space forward vector
-	currentRotation = DirectX::XMQuaternionRotationRollPitchYaw(x, y, z);	// tranform's current rotation in world space
+	// change in position (ie. direction vector) we want to apply to this transform
+	DirectX::XMVECTOR relativeDirection = DirectX::XMVectorSet(x, y, z, 0.0f);
 
-	currentDirection = DirectX::XMVector3Rotate(currentDirection, currentRotation);	//forward vector based on transform's rotation
+	// tranform's current rotation that we want to apply to the above direction vector
+	DirectX::XMVECTOR currentRotation = DirectX::XMQuaternionRotationRollPitchYaw(transformRotation.x, transformRotation.y, transformRotation.z);	
 
-	// LOST HERE AS WELL. AM I RIGHT TO REFERENCE THE TRANSFORMPOSITION AND CURRENT POSITION?
-	relativePosition = DirectX::XMLoadFloat3(&transformPosition);
-	DirectX::XMStoreFloat3(relativePosition, currentDirection);
+	// update relativeDirection to account for the transform's rotation
+	relativeDirection = DirectX::XMVector3Rotate(relativeDirection, currentRotation);	
+
+	// add relativeDirection to current position, then update current position
+	DirectX::XMVECTOR newPosition = DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&transformPosition), relativeDirection);
+	DirectX::XMStoreFloat3(&transformPosition, newPosition);
 }
