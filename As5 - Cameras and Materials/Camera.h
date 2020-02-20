@@ -14,8 +14,9 @@ public:
 	DirectX::XMFLOAT4X4 GetProjectionMatrix();
 
 	void UpdateViewMatrix();
-	void UpdateProjectionMatrix();
+	void UpdateProjectionMatrix(float aspectRatio);
 
+	void Update(float dt, HWND windowHandle);
 
 private:
 	Transform cameraTransform;

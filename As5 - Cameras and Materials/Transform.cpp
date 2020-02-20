@@ -105,15 +105,15 @@ void Transform::Scale(float x, float y, float z)
 void Transform::MoveRelative(float x, float y, float z) 
 {
 	// change in position (ie. direction vector) we want to apply to this transform
-	DirectX::XMVECTOR relativeDirection = DirectX::XMVectorSet(x, y, z, 0.0f);
+	DirectX::XMVECTOR relativeForward = DirectX::XMVectorSet(x, y, z, 0.0f);
 
 	// tranform's current rotation, to be applied to the above direction vector
 	DirectX::XMVECTOR currentRotation = DirectX::XMQuaternionRotationRollPitchYaw(transformRotation.x, transformRotation.y, transformRotation.z);	
 
-	// update relativeDirection to account for the transform's rotation
-	relativeDirection = DirectX::XMVector3Rotate(relativeDirection, currentRotation);	
+	// update relativeForward to account for the transform's rotation
+	relativeForward = DirectX::XMVector3Rotate(relativeForward, currentRotation);	
 
-	// add relativeDirection to current position, then update current position
-	DirectX::XMVECTOR newPosition = DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&transformPosition), relativeDirection);
+	// add relativeForward to current position, then update current position
+	DirectX::XMVECTOR newPosition = DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&transformPosition), relativeForward);
 	DirectX::XMStoreFloat3(&transformPosition, newPosition);
 }
