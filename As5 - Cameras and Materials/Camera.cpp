@@ -13,6 +13,8 @@ Camera::Camera(DirectX::XMFLOAT3 initCamPos, DirectX::XMFLOAT3 initCamOri, float
 	movementSpeed = moveSpd;
 	mouseLookSpeed = lookSpd;
 
+	prevMousePos = { 0,0 };
+
 	UpdateViewMatrix();
 	UpdateProjectionMatrix(aspRat);
 }
@@ -57,36 +59,64 @@ void Camera::Update(float dt, HWND windowHandle)
 	// update transform and view matrix
 		// scale camera's speed by dt
 
-
+	// Keyboard input for camera movement
 	if (GetAsyncKeyState('W') & 0x8000) 
 	{
 		// Relative Forward
+		cameraTransform.MoveRelative(0.0f, 5.0f * dt, 0.0f);
 	}
 
 	if (GetAsyncKeyState('S') & 0x8000)
 	{
 		// Relative Backward
+		cameraTransform.MoveRelative(0.0f, -5.0f * dt, 0.0f);
 	}
 
 	if (GetAsyncKeyState('A') & 0x8000)
 	{
 		// Relative Left
+		cameraTransform.MoveRelative(-5.0f * dt, 0.0f, 0.0f);
 	}
 
 	if (GetAsyncKeyState('D') & 0x8000)
 	{
 		// Relative Right
+		cameraTransform.MoveRelative(5.0f * dt, 0.0f, 0.0f);
 	}
 
 	if (GetAsyncKeyState('E') & 0x8000)
 	{
 		// Absolute Up
+		cameraTransform.MoveAbsolute(0.0f, 5.0f * dt, 0.0f);
 	}
 
 	if (GetAsyncKeyState('Q') & 0x8000)
 	{
 		// Absolute Down
+		cameraTransform.MoveAbsolute(0.0f, -5.0f * dt, 0.0f);
 	}
+
+
+	// Mouse input for camera rotation
+	POINT mousePos = {};
+	GetCursorPos(&mousePos);	// fills the mousePos struct with its coords
+	ScreenToClient(windowHandle, &mousePos);	// makes point relative to client window
+
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) 
+	{
+		// rotate camera based on how much mouse has moved
+		float deltaCamPosX = prevMousePos.x - mousePos.x; 
+		float deltaCamPosY = prevMousePos.y - mousePos.y;
+
+		// rotate camera((mouseLookSpeed * dt * deltaCamPosY) as pitch,  (mouseLookSpeed * dt * deltaCamPosX)as yaw, 0 as roll)
+		cameraTransform.Rotate(mouseLookSpeed * dt * deltaCamPosY, mouseLookSpeed * dt * deltaCamPosX, 0.0f);
+	}
+
+	// Any input requires the view matrix to be updated
+	UpdateViewMatrix();
+
+	// Update prevMousePos using mousePos
+	prevMousePos = mousePos;
 }
 
 /* 
