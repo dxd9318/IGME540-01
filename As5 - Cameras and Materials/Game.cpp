@@ -45,6 +45,9 @@ Game::~Game()
 	// - If we weren't using smart pointers, we'd need
 	//   to call Release() on each DirectX object
 
+	// RELEASE CAMERA HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	delete camera;
+	camera = nullptr;
 
 	// RELEASE GAMEENTITIES HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	delete triangleEntity_01;
@@ -85,7 +88,17 @@ void Game::Init()
 	// geometry to draw and some simple camera matrices.
 	//  - You'll be expanding and/or replacing these later
 	LoadShaders();
-	//CreateBasicGeometry();	// Functionality of this method moved to Mesh class
+
+	// Init Camera
+	camera = new Camera(
+		DirectX::XMFLOAT3(0.0f, 0.0f, -5.0f),	// camera start position
+		DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),	// camera start orientation
+		(float)(this->width / this->height),	// aspect ratio
+		DirectX::XM_PIDIV4,						// field of view
+		0.01f,		// near plane distance
+		1000.0f,	// far plane distance
+		0.05f,		// move speed
+		0.05f);		// mouse look speed
 
 	// Initialize Mesh pointer objects here
 	// Create some temporary variables to represent colors
@@ -277,90 +290,6 @@ void Game::LoadShaders()
 		pixelShader.GetAddressOf());
 }
 
-/*
- //--------------------------------------------------------
- //Creates the geometry we're going to draw - a single triangle for now
- //--------------------------------------------------------
-void Game::CreateBasicGeometry()
-{	
-	// Create some temporary variables to represent colors
-	// - Not necessary, just makes things more readable
-	XMFLOAT4 red = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-	XMFLOAT4 green = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	XMFLOAT4 blue = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-
-	// Set up the vertices of the triangle we would like to draw
-	// - We're going to copy this array, exactly as it exists in memory
-	//    over to a DirectX-controlled data structure (the vertex buffer)
-	// - Note: Since we don't have a camera or really any concept of
-	//    a "3d world" yet, we're simply describing positions within the
-	//    bounds of how the rasterizer sees our screen: [-1 to +1] on X and Y
-	// - This means (0,0) is at the very center of the screen.
-	// - These are known as "Normalized Device Coordinates" or "Homogeneous 
-	//    Screen Coords", which are ways to describe a position without
-	//    knowing the exact size (in pixels) of the image/window/etc.  
-	// - Long story short: Resizing the window also resizes the triangle,
-	//    since we're describing the triangle in terms of the window itself
-	Vertex vertices[] =
-	{
-		{ XMFLOAT3(+0.0f, +0.5f, +0.0f), red },
-		{ XMFLOAT3(+0.5f, -0.5f, +0.0f), blue },
-		{ XMFLOAT3(-0.5f, -0.5f, +0.0f), green },
-	};
-
-	// Set up the indices, which tell us which vertices to use and in which order
-	// - This is somewhat redundant for just 3 vertices (it's a simple example)
-	// - Indices are technically not required if the vertices are in the buffer 
-	//    in the correct order and each one will be used exactly once
-	// - But just to see how it's done...
-	int indices[] = { 0, 1, 2 };
-
-
-	
-	// Create the VERTEX BUFFER description -----------------------------------
-	// - The description is created on the stack because we only need
-	//    it to create the buffer.  The description is then useless.
-	D3D11_BUFFER_DESC vbd;
-	vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	vbd.ByteWidth = sizeof(Vertex) * 3;       // 3 = number of vertices in the buffer
-	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER; // Tells DirectX this is a vertex buffer
-	vbd.CPUAccessFlags = 0;
-	vbd.MiscFlags = 0;
-	vbd.StructureByteStride = 0;
-
-	// Create the proper struct to hold the initial vertex data
-	// - This is how we put the initial data into the buffer
-	D3D11_SUBRESOURCE_DATA initialVertexData;
-	initialVertexData.pSysMem = vertices;
-
-	// Actually create the buffer with the initial data
-	// - Once we do this, we'll NEVER CHANGE THE BUFFER AGAIN
-	device->CreateBuffer(&vbd, &initialVertexData, vertexBuffer.GetAddressOf());
-	
-
-
-	// Create the INDEX BUFFER description ------------------------------------
-	// - The description is created on the stack because we only need
-	//    it to create the buffer.  The description is then useless.
-	D3D11_BUFFER_DESC ibd;
-	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(int) * 3;         // 3 = number of indices in the buffer
-	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER; // Tells DirectX this is an index buffer
-	ibd.CPUAccessFlags = 0;
-	ibd.MiscFlags = 0;
-	ibd.StructureByteStride = 0;
-
-	// Create the proper struct to hold the initial index data
-	// - This is how we put the initial data into the buffer
-	D3D11_SUBRESOURCE_DATA initialIndexData;
-	initialIndexData.pSysMem = indices;
-
-	// Actually create the buffer with the initial data
-	// - Once we do this, we'll NEVER CHANGE THE BUFFER AGAIN
-	device->CreateBuffer(&ibd, &initialIndexData, indexBuffer.GetAddressOf());
-}
-*/
-
 // --------------------------------------------------------
 // Handle resizing DirectX "stuff" to match the new window size.
 // For instance, updating our projection matrix's aspect ratio.
@@ -369,6 +298,12 @@ void Game::OnResize()
 {
 	// Handle base-level DX resize stuff
 	DXCore::OnResize();
+
+	// if camera has been initialized, update its projection matrix using window's current aspect ratio
+	if (camera != nullptr) 
+	{
+		camera->UpdateProjectionMatrix((float)(this->width / this->height));
+	}
 }
 
 // --------------------------------------------------------
@@ -399,13 +334,14 @@ void Game::Update(float deltaTime, float totalTime)
 	entityVector[3]->GetTransform()->SetScale(0.15f, 0.15f, 1.0f);
 	static float rotateAngle = 0;
 	entityVector[3]->GetTransform()->SetRotation(0.0f, 0.0f, rotateAngle);
-	rotateAngle += XM_PI/20000;
+	rotateAngle += XM_PI / 20000;
 
 	// circle 2 
 	float scaleChange = sin(rotateAngle) / 10;
 	entityVector[4]->GetTransform()->SetPosition(0.75f, 0.75f, 0.0f);
 	entityVector[4]->GetTransform()->SetScale(scaleChange, scaleChange, 1.0f);
 
+	camera->Update(deltaTime, this->hWnd);
 }
 
 // --------------------------------------------------------

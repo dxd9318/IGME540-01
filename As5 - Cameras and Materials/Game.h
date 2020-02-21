@@ -4,8 +4,8 @@
 #include <DirectXMath.h>
 #include <wrl/client.h> // Used for ComPtr - a smart pointer for COM objects
 #include <vector>
-#include "GameEntity.h"
-//#include "Mesh.h"	// Geometry data will be held in the mesh class, so Game will need to pull from it
+#include "Camera.h"
+#include "GameEntity.h" // Has Mesh.h included
 #include "BufferStructs.h"
 
 class Game 
@@ -27,26 +27,16 @@ private:
 
 	// Initialization helper methods - feel free to customize, combine, etc.
 	void LoadShaders(); 
-	/*
-		The following code and functionality was moved to the Mesh class.
 
-		//void CreateBasicGeometry();
-
-		//// Note the usage of ComPtr below
-		////  - This is a smart pointer for objects that abide by the
-		////    Component Object Mode, which DirectX objects do
-		////  - More info here: https://github.com/Microsoft/DirectXTK/wiki/ComPtr
-
-		//// Buffers to hold actual geometry data
-		//Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
-		//Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
-	*/
+	// Camera Object
+	Camera* camera = nullptr;
 
 	// Mesh objects
 	Mesh* triangleMesh = nullptr;
 	Mesh* rectangleMesh = nullptr;
 	Mesh* circleMesh = nullptr;
 
+	// Entity Objects
 	GameEntity* triangleEntity_01 = nullptr;
 	GameEntity* squareEntity_01 = nullptr;
 	GameEntity* squareEntity_02 = nullptr;
