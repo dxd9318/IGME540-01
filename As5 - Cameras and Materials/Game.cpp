@@ -92,13 +92,13 @@ void Game::Init()
 	// Init Camera
 	camera = new Camera(
 		DirectX::XMFLOAT3(0.0f, 0.0f, -5.0f),	// camera start position
-		DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),	// camera start orientation
+		DirectX::XMFLOAT3(0.0f, 0.0f, 0.01f),	// camera start orientation
 		(float)(this->width / this->height),	// aspect ratio
 		DirectX::XM_PIDIV4,						// field of view
 		0.01f,		// near plane distance
 		1000.0f,	// far plane distance
 		0.05f,		// move speed
-		0.05f);		// mouse look speed
+		0.5f);		// mouse look speed
 
 	// Initialize Mesh pointer objects here
 	// Create some temporary variables to represent colors
@@ -397,6 +397,8 @@ void Game::Draw(float deltaTime, float totalTime)
 		// Assigning data to Constant Buffer for Vertex Shader
 		vsData.colorTint = XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);
 		vsData.worldMatrix = entityVector[i]->GetTransform()->GetWorldMatrix();
+		vsData.viewMatrix = camera->GetViewMatrix();
+		vsData.projectionMatrix = camera->GetProjectionMatrix();
 
 		D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
 		context->Map(vsConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
@@ -422,58 +424,6 @@ void Game::Draw(float deltaTime, float totalTime)
 			0,     // Offset to the first index we want to use
 			0);    // Offset to add to each index when looking up vertices
 	}
-
-	//// Mesh object 1
-	//context->IASetVertexBuffers(0, 1, triangleMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
-	//context->IASetIndexBuffer(triangleMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
-
-	//// Assigning data to Constant Buffer for Vertex Shader
-	//VertexShaderExternalData vsData;
-	//vsData.colorTint	= XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);
-	//vsData.offset		= XMFLOAT3(0.25f, 0.0f, 0.0f);	// REPLACE WITH vsData.worldMatrix = transformPtr->GetWorldMatrix(); 
-
-	//D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
-	//context->Map(vsConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
-
-	//memcpy(mappedBuffer.pData, &vsData, sizeof(vsData));
-	//
-	//context->Unmap(vsConstantBuffer.Get(), 0);
-
-	//context->VSSetConstantBuffers(
-	//	0,		// Which slot (register) to bind the buffer to?
-	//	1,		// How many are we activating? Can do multiple at once
-	//	vsConstantBuffer.GetAddressOf()	// Array of buffers (or the address of one)
-	//);
-
-
-	// Finally do the actual drawing
-	//  - Do this ONCE PER OBJECT you intend to draw
-	//  - This will use all of the currently set DirectX "stuff" (shaders, buffers, etc)
-	//  - DrawIndexed() uses the currently set INDEX BUFFER to look up corresponding
-	//     vertices in the currently set VERTEX BUFFER
-	//context->DrawIndexed(
-	//	triangleMesh->GetIndexCount(),    //3, // The number of indices to use (we could draw a subset if we wanted)
-	//	0,     // Offset to the first index we want to use
-	//	0);    // Offset to add to each index when looking up vertices
-
-	/*
-	// Mesh object 2
-	context->IASetVertexBuffers(0, 1, rectangleMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
-	context->IASetIndexBuffer(rectangleMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
-	context->DrawIndexed(
-		rectangleMesh->GetIndexCount(),	// The number of indices to use (we could draw a subset if we wanted)
-		0,     // Offset to the first index we want to use
-		0);    // Offset to add to each index when looking up vertices
-
-
-	// Mesh object 3
-	context->IASetVertexBuffers(0, 1, circleMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
-	context->IASetIndexBuffer(circleMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
-	context->DrawIndexed(
-		circleMesh->GetIndexCount(),	// The number of indices to use (we could draw a subset if we wanted)
-		0,     // Offset to the first index we want to use
-		0);    // Offset to add to each index when looking up vertices
-	*/
 
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

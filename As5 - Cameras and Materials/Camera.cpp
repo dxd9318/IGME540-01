@@ -63,13 +63,13 @@ void Camera::Update(float dt, HWND windowHandle)
 	if (GetAsyncKeyState('W') & 0x8000) 
 	{
 		// Relative Forward
-		cameraTransform.MoveRelative(0.0f, 5.0f * dt, 0.0f);
+		cameraTransform.MoveRelative(0.0f, 0.0f, 5.0f * dt);
 	}
 
 	if (GetAsyncKeyState('S') & 0x8000)
 	{
 		// Relative Backward
-		cameraTransform.MoveRelative(0.0f, -5.0f * dt, 0.0f);
+		cameraTransform.MoveRelative(0.0f, 0.0f, -5.0f * dt);
 	}
 
 	if (GetAsyncKeyState('A') & 0x8000)
@@ -109,7 +109,7 @@ void Camera::Update(float dt, HWND windowHandle)
 		float deltaCamPosY = prevMousePos.y - mousePos.y;
 
 		// rotate camera((mouseLookSpeed * dt * deltaCamPosY) as pitch,  (mouseLookSpeed * dt * deltaCamPosX)as yaw, 0 as roll)
-		cameraTransform.Rotate(mouseLookSpeed * dt * deltaCamPosY, mouseLookSpeed * dt * deltaCamPosX, 0.0f);
+		cameraTransform.Rotate(mouseLookSpeed * dt * -deltaCamPosX, mouseLookSpeed * dt * deltaCamPosY, 0.0f);
 	}
 
 	// Any input requires the view matrix to be updated
