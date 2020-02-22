@@ -1,9 +1,10 @@
 #include "GameEntity.h"
 
 // Constructor
-GameEntity::GameEntity(Mesh* inputMesh)
+GameEntity::GameEntity(Mesh* inputMesh, Material* inputMat)
 {
 	entityMesh = inputMesh;
+	entityMaterial = inputMat;
 }
 
 // Destructor
@@ -21,19 +22,12 @@ GameEntity::~GameEntity()
 }
 
 // Getters
+/*
+	Note that, even though you're probably not storing the Transform as a pointer, you might
+	still want to return a pointer (the address of the transform field). This is one way to
+	ensure that when accessing the transform from outside the class, you're changing the
+	entity's actual transform and not a copy of it.
+*/
+Transform* GameEntity::GetTransform() { return &entityTransform; }
+
 Mesh* GameEntity::GetMesh() { return entityMesh; }
-
-Transform* GameEntity::GetTransform() 
-{
-	/* 
-		Note that, even though you're probably not storing the Transform as a pointer, you might 
-		still want to return a pointer (the address of the transform field). This is one way to 
-		ensure that when accessing the transform from outside the class, you're changing the 
-		entity's actual transform and not a copy of it.
-	*/
-	return &entityTransform; 
-}
-
-//void GameEntity::Draw(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context, Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer)
-//{
-//}

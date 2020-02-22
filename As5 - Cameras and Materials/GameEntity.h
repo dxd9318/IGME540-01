@@ -1,19 +1,20 @@
 #pragma once
 #include "Mesh.h"
+#include "Material.h"
 #include "Transform.h"
 
 class GameEntity {
 public:
-	GameEntity(Mesh* inputMesh);
+	// Constructor and Destructor
+	GameEntity(Mesh* inputMesh, Material* inputMat);
 	~GameEntity();
 
 	// Getters
-	Mesh* GetMesh();
 	Transform* GetTransform();
+	Mesh* GetMesh();
 
 private:
 	Transform entityTransform;
 	Mesh* entityMesh;
-
-	//void Draw(Microsoft::WRL::ComPtr<ID3D11DeviceContext> context, Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer);
+	Material* entityMaterial;
 };

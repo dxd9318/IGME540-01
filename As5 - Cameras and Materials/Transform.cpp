@@ -14,10 +14,7 @@ Transform::Transform()
 }
 
 // Destructor
-Transform::~Transform() 
-{
-
-}
+Transform::~Transform() {}
 
 // Setters
 void Transform::SetPosition(float x, float y, float z) 

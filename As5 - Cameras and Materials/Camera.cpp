@@ -1,5 +1,6 @@
 #include "Camera.h"
 
+// Constructor
 Camera::Camera(DirectX::XMFLOAT3 initCamPos, DirectX::XMFLOAT3 initCamOri, float aspRat, float fov, float nearPlane, float farPlane, float moveSpd, float lookSpd)
 {
 	//init position, and orientation
@@ -19,10 +20,8 @@ Camera::Camera(DirectX::XMFLOAT3 initCamPos, DirectX::XMFLOAT3 initCamOri, float
 	UpdateProjectionMatrix(aspRat);
 }
 
-Camera::~Camera() 
-{
-
-}
+// Destructor
+Camera::~Camera() {}
 
 // Getters
 DirectX::XMFLOAT4X4 Camera::GetViewMatrix() 

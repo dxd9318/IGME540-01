@@ -76,6 +76,16 @@ Game::~Game()
 
 	delete circleMesh;
 	circleMesh = nullptr;
+
+	// RELEASE MATERIAL POINTERS HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	delete mat1;
+	mat1 = nullptr;
+
+	delete mat2;
+	mat2 = nullptr;
+
+	delete mat3;
+	mat3 = nullptr;
 }
 
 // --------------------------------------------------------
@@ -89,6 +99,7 @@ void Game::Init()
 	//  - You'll be expanding and/or replacing these later
 	LoadShaders();
 
+	// --------------------------------------------------------------------------------------
 	// Init Camera
 	camera = new Camera(
 		DirectX::XMFLOAT3(0.0f, 0.0f, -5.0f),	// camera start position
@@ -100,7 +111,14 @@ void Game::Init()
 		0.05f,		// move speed
 		0.5f);		// mouse look speed
 
-	// Initialize Mesh pointer objects here
+	// --------------------------------------------------------------------------------------
+	// Initialize Material pointer objects
+	mat1 = new Material(pixelShader, vertexShader, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f));
+	mat2 = new Material(pixelShader, vertexShader, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f));
+	mat3 = new Material(pixelShader, vertexShader, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f));
+
+	// --------------------------------------------------------------------------------------
+	// Initialize Mesh pointer objects
 	// Create some temporary variables to represent colors
 	XMFLOAT4 red = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	XMFLOAT4 green = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
@@ -116,7 +134,6 @@ void Game::Init()
 	int triangleIndices[] = { 0, 1, 2 };
 	triangleMesh = new Mesh(triangleVertices, 3, triangleIndices, 3, device);
 
-
 	// Mesh object 2 - Rectangle
 	Vertex rectangleVertices[] =
 	{
@@ -128,7 +145,6 @@ void Game::Init()
 	int rectangleIndices[] = { 0, 1, 2, 0, 2, 3 };	//0, 1, 2	//0, 2, 3
 	rectangleMesh = new Mesh(rectangleVertices, 4, rectangleIndices, 6, device);
 
-	
 	// Mesh object 3 - Circle (12 triangles, 13 vertices)
 	// variables for some trig values for repeated use, and readability
 	float cosPiOverThree = XMScalarCos(XM_PI / 3);	// Value = (1/2)
@@ -182,12 +198,13 @@ void Game::Init()
 	};
 	circleMesh = new Mesh(circleVertices, 13, circleIndices, 36, device);
 
+	// --------------------------------------------------------------------------------------
 	// Create and store entities
-	triangleEntity_01 = new GameEntity(triangleMesh);
-	squareEntity_01 = new GameEntity(rectangleMesh);
-	squareEntity_02 = new GameEntity(rectangleMesh);
-	circleEntity_01 = new GameEntity(circleMesh);
-	circleEntity_02 = new GameEntity(circleMesh);
+	triangleEntity_01 = new GameEntity(triangleMesh, mat1);
+	squareEntity_01 = new GameEntity(rectangleMesh, mat2);
+	squareEntity_02 = new GameEntity(rectangleMesh, mat3);
+	circleEntity_01 = new GameEntity(circleMesh, mat1);
+	circleEntity_02 = new GameEntity(circleMesh, mat2);
 
 	entityVector.push_back(triangleEntity_01);
 	entityVector.push_back(squareEntity_01);
@@ -195,13 +212,13 @@ void Game::Init()
 	entityVector.push_back(circleEntity_01);
 	entityVector.push_back(circleEntity_02);
 
-
+	// --------------------------------------------------------------------------------------
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives (points, lines or triangles) we want to draw.  
 	// Essentially: "What kind of shape should the GPU draw with our data?"
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------
 	// Initialize constant buffers
 	// Get size of cbuffer as the next multiple of 16
 	unsigned int size = sizeof(VertexShaderExternalData);
@@ -216,7 +233,7 @@ void Game::Init()
 
 	// Feed D3D the desc and buffer location to actually create the buffer
 	device->CreateBuffer(&cbDesc, 0, &vsConstantBuffer);
-	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------
 }
 
 // --------------------------------------------------------

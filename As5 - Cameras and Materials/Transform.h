@@ -3,6 +3,7 @@
 
 class Transform {
 public:
+	// Constructor and Destructor
 	Transform();
 	~Transform();
 
@@ -22,10 +23,8 @@ public:
 	void Rotate(float pitch, float yaw, float roll);
 	void Scale(float x, float y, float z);
 
-	// Relative
 	void MoveRelative(float x, float y, float z);
 	
-
 private:
 	DirectX::XMFLOAT4X4 transformWorldMatrix; // represents entity's current position, rotation and scale.
 	DirectX::XMFLOAT3 transformPosition;
@@ -33,6 +32,4 @@ private:
 	DirectX::XMFLOAT3 transformRotation;
 
 	bool matrixDirty; // if any transform field is updated, this will too to signal the matrix to update
-
-	
 };

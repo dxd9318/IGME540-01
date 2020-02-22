@@ -6,6 +6,7 @@
 class Camera 
 {
 public:
+	// Constructor and Destructor
 	Camera(DirectX::XMFLOAT3 initCamPos, DirectX::XMFLOAT3 initCamOri, float aspRat, float fov, float nearPlane, float farPlane, float moveSpd, float lookSpd);
 	~Camera();
 

@@ -1,27 +1,26 @@
 #pragma once
-#include "DXCore.h"
+#include "DXCore.h"	// Used for ID3D11 stuff
 #include <DirectXMath.h>
 #include <wrl/client.h> // Used for ComPtr - a smart pointer for COM objects
 
 class Material 
 {
 public:
-	// Ctor and Dtor
-	Material();
+	// Constructor and Destructor
+	Material(Microsoft::WRL::ComPtr<ID3D11PixelShader> pxlShdr, Microsoft::WRL::ComPtr<ID3D11VertexShader> vtxShdr, DirectX::XMFLOAT4 mColTint);
 	~Material();
 
 	// Getters
-	DirectX::XMFLOAT4 GetMaterialColorTint();
+	Microsoft::WRL::ComPtr<ID3D11VertexShader> GetVertexShader();
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetPixelShader();
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> GetVertexShader();
-	
+	DirectX::XMFLOAT4 GetMaterialColorTint();
+
 	// Setters
-	void SetMaterialColorTint();
+	void SetMaterialColorTint(DirectX::XMFLOAT4 inputTint);
 
 private:
-	DirectX::XMFLOAT4 matColorTint;
-
-	// MIGHT HAVE TO COMMENT OUT IN GAME.H <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
+
+	DirectX::XMFLOAT4 matColorTint;
 };
