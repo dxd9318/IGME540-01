@@ -12,6 +12,7 @@ public:
 	// Getters
 	Transform* GetTransform();
 	Mesh* GetMesh();
+	Material* GetMaterial();
 
 private:
 	Transform entityTransform;

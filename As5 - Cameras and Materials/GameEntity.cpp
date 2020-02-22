@@ -31,3 +31,5 @@ GameEntity::~GameEntity()
 Transform* GameEntity::GetTransform() { return &entityTransform; }
 
 Mesh* GameEntity::GetMesh() { return entityMesh; }
+
+Material* GameEntity::GetMaterial() { return entityMaterial; }

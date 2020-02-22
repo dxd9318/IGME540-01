@@ -336,18 +336,18 @@ void Game::Update(float deltaTime, float totalTime)
 	entityVector[0]->GetTransform()->SetScale(0.5f, 0.75f, 1.0f);
 
 	// rectangle 1
-	entityVector[1]->GetTransform()->SetPosition(0.0f, -1.0f, 0.0f);
+	entityVector[1]->GetTransform()->SetPosition(0.0f, -1.0f, 1.0f);
 	entityVector[1]->GetTransform()->SetRotation(0.0f, 0.0f, XM_PIDIV4);
 	entityVector[1]->GetTransform()->SetScale(0.25f, 0.25f, 1.0f);
 
 	// rect 2
 	static float decrementX = 0;
-	entityVector[2]->GetTransform()->SetPosition(decrementX, 0.0f, 0.0f);
+	entityVector[2]->GetTransform()->SetPosition(decrementX, 0.0f, 2.0f);
 	decrementX -= 0.000005f;
 	entityVector[2]->GetTransform()->SetScale(1.0f, 0.5f, 1.0f);
 
 	// circle 1
-	entityVector[3]->GetTransform()->SetPosition(0.5f, -0.75f, 0.0f);
+	entityVector[3]->GetTransform()->SetPosition(0.5f, -0.75f, 3.0f);
 	entityVector[3]->GetTransform()->SetScale(0.15f, 0.15f, 1.0f);
 	static float rotateAngle = 0;
 	entityVector[3]->GetTransform()->SetRotation(0.0f, 0.0f, rotateAngle);
@@ -355,7 +355,7 @@ void Game::Update(float deltaTime, float totalTime)
 
 	// circle 2 
 	float scaleChange = sin(rotateAngle) / 10;
-	entityVector[4]->GetTransform()->SetPosition(0.75f, 0.75f, 0.0f);
+	entityVector[4]->GetTransform()->SetPosition(0.75f, 0.75f, 4.0f);
 	entityVector[4]->GetTransform()->SetScale(scaleChange, scaleChange, 1.0f);
 
 	camera->Update(deltaTime, this->hWnd);
@@ -383,8 +383,9 @@ void Game::Draw(float deltaTime, float totalTime)
 	//  - These don't technically need to be set every frame
 	//  - Once you start applying different shaders to different objects,
 	//    you'll need to swap the current shaders before each draw
-	context->VSSetShader(vertexShader.Get(), 0, 0);
-	context->PSSetShader(pixelShader.Get(), 0, 0);
+	// MOVED TO DRAW LOOP BELOW
+	//context->VSSetShader(vertexShader.Get(), 0, 0);
+	//context->PSSetShader(pixelShader.Get(), 0, 0);
 
 	// Ensure the pipeline knows how to interpret the data (numbers)
 	// from the vertex buffer.  
@@ -405,14 +406,17 @@ void Game::Draw(float deltaTime, float totalTime)
 
 	VertexShaderExternalData vsData; // For assigning data to cbuffer for VS in the following loop
 
-	// REPLACE WITH DRAWING BY ENTITY, LOOP THROUGH VECTOR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	for (int i = 0; i < entityVector.size(); i++) 
 	{
 		context->IASetVertexBuffers(0, 1, entityVector[i]->GetMesh()->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 		context->IASetIndexBuffer(entityVector[i]->GetMesh()->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
 		// Assigning data to Constant Buffer for Vertex Shader
-		vsData.colorTint = XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);
+		context->VSSetShader(entityVector[i]->GetMaterial()->GetVertexShader().Get(), 0, 0);
+		context->PSSetShader(entityVector[i]->GetMaterial()->GetPixelShader().Get(), 0, 0);
+
+		//vsData.colorTint = XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);
+		vsData.colorTint = entityVector[i]->GetMaterial()->GetMaterialColorTint();
 		vsData.worldMatrix = entityVector[i]->GetTransform()->GetWorldMatrix();
 		vsData.viewMatrix = camera->GetViewMatrix();
 		vsData.projectionMatrix = camera->GetProjectionMatrix();
