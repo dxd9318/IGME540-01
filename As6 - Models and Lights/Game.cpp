@@ -129,9 +129,9 @@ void Game::Init()
 	// Mesh object 1 - Basic Triangle	// REMEMBER, CLOCKWISE!!!
 	Vertex triangleVertices[] =
 	{
-		{ XMFLOAT3(-0.75f, +1.0f, +0.0f), red },
-		{ XMFLOAT3(-0.5f, +0.5f, +0.0f), blue },
-		{ XMFLOAT3(-1.0f, +0.5f, +0.0f), green },
+		{ XMFLOAT3(-0.75f, +1.0f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(-0.5f, +0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(-1.0f, +0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
 	};
 	int triangleIndices[] = { 0, 1, 2 };
 	triangleMesh = new Mesh(triangleVertices, 3, triangleIndices, 3, device);
@@ -139,10 +139,10 @@ void Game::Init()
 	// Mesh object 2 - Rectangle
 	Vertex rectangleVertices[] =
 	{
-		{ XMFLOAT3(+0.5f, +1.0f, +0.0f), red },
-		{ XMFLOAT3(+1.0f, +1.0f, +0.0f), blue },
-		{ XMFLOAT3(+1.0f, +0.5f, +0.0f), red },
-		{ XMFLOAT3(+0.5f, +0.5f, +0.0f), green },
+		{ XMFLOAT3(+0.5f, +1.0f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(+1.0f, +1.0f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(+1.0f, +0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(+0.5f, +0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
 	};
 	int rectangleIndices[] = { 0, 1, 2, 0, 2, 3 };	//0, 1, 2	//0, 2, 3
 	rectangleMesh = new Mesh(rectangleVertices, 4, rectangleIndices, 6, device);
@@ -154,19 +154,19 @@ void Game::Init()
 
 	Vertex circleVertices[] =
 	{
-		{ XMFLOAT3(+0.0f, +0.0f, +0.0f), green },	// 0 - Center
-		{ XMFLOAT3(+0.0f, +0.5f, +0.0f), red },		// 1 - Top
-		{ XMFLOAT3(cosPiOverThree * 0.5f, sinPiOverThree * 0.5f, +0.0f), blue },	// pi/3
-		{ XMFLOAT3(sinPiOverThree * 0.5f, cosPiOverThree * 0.5f, +0.0f), red },		// pi/6
-		{ XMFLOAT3(+0.5f, +0.0f, +0.0f), blue },	// 4 - Right
-		{ XMFLOAT3(sinPiOverThree * 0.5f, cosPiOverThree * -0.5f, +0.0f), red },
-		{ XMFLOAT3(cosPiOverThree * 0.5f, sinPiOverThree * -0.5f, +0.0f), blue },
-		{ XMFLOAT3(+0.0f, -0.5f, +0.0f), red },		// 7 - Bottom
-		{ XMFLOAT3(cosPiOverThree * -0.5f, sinPiOverThree * -0.5f, +0.0f), blue },
-		{ XMFLOAT3(sinPiOverThree * -0.5f, cosPiOverThree * -0.5f, +0.0f), red },
-		{ XMFLOAT3(-0.5f, +0.0f, +0.0f), blue },	// 10 - Left
-		{ XMFLOAT3(sinPiOverThree * -0.5f, cosPiOverThree * 0.5f, +0.0f), red },
-		{ XMFLOAT3(cosPiOverThree * -0.5f, sinPiOverThree * 0.5f, +0.0f), blue },
+		{ XMFLOAT3(+0.0f, +0.0f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },										// 0 - Center
+		{ XMFLOAT3(+0.0f, +0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },										// 1 - Top
+		{ XMFLOAT3(cosPiOverThree * 0.5f, sinPiOverThree * 0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },		// pi/3
+		{ XMFLOAT3(sinPiOverThree * 0.5f, cosPiOverThree * 0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },		// pi/6
+		{ XMFLOAT3(+0.5f, +0.0f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },										// 4 - Right
+		{ XMFLOAT3(sinPiOverThree * 0.5f, cosPiOverThree * -0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(cosPiOverThree * 0.5f, sinPiOverThree * -0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(+0.0f, -0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },										// 7 - Bottom
+		{ XMFLOAT3(cosPiOverThree * -0.5f, sinPiOverThree * -0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(sinPiOverThree * -0.5f, cosPiOverThree * -0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(-0.5f, +0.0f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },										// 10 - Left
+		{ XMFLOAT3(sinPiOverThree * -0.5f, cosPiOverThree * 0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(cosPiOverThree * -0.5f, sinPiOverThree * 0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
 
 		/*
 			X = cosine of angle
