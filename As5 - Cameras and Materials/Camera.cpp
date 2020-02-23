@@ -41,7 +41,9 @@ void Camera::UpdateViewMatrix()
 		&viewMatrix, 
 		DirectX::XMMatrixLookToLH(
 			DirectX::XMLoadFloat3(&cameraTransform.GetPosition()),	// camera's position
-			DirectX::XMVector3Rotate(DirectX::XMVectorSet(0, 0, 1, 0), DirectX::XMLoadFloat3(&cameraTransform.GetPitchYawRoll())),	// camera's forward vector, direction for camera to look to
+			DirectX::XMVector3Rotate(
+				DirectX::XMVectorSet(0, 0, 1, 0), 
+				DirectX::XMQuaternionRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&cameraTransform.GetPitchYawRoll()))),	// camera's forward vector, direction for camera to look to
 			DirectX::XMVectorSet(0, 1, 0, 0))); // up vector
 }
 
@@ -107,8 +109,8 @@ void Camera::Update(float dt, HWND windowHandle)
 		float deltaCamPosX = prevMousePos.x - mousePos.x; 
 		float deltaCamPosY = prevMousePos.y - mousePos.y;
 
-		// rotate camera((mouseLookSpeed * dt * deltaCamPosY) as pitch,  (mouseLookSpeed * dt * deltaCamPosX)as yaw, 0 as roll)
-		cameraTransform.Rotate(mouseLookSpeed * dt * -deltaCamPosX, mouseLookSpeed * dt * deltaCamPosY, 0.0f);
+		// rotate camera((mouseLookSpeed * dt * -deltaCamPosY) as pitch,  (mouseLookSpeed * dt * -deltaCamPosX)as yaw, 0 as roll)
+		cameraTransform.Rotate(mouseLookSpeed * dt * -deltaCamPosY, mouseLookSpeed * dt * -deltaCamPosX, 0.0f);
 	}
 
 	// Any input requires the view matrix to be updated

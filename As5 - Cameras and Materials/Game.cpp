@@ -109,7 +109,7 @@ void Game::Init()
 		0.01f,		// near plane distance
 		1000.0f,	// far plane distance
 		0.05f,		// move speed
-		0.5f);		// mouse look speed
+		2.0f);		// mouse look speed
 
 	// --------------------------------------------------------------------------------------
 	// Initialize Material pointer objects
