@@ -3,6 +3,8 @@
 #include <d3d11.h>	// For accessing DirectX elements (ie. ID3DLLBuffer)
 #include <wrl/client.h> // Used for ComPtr - a smart pointer for COM objects
 #include "Vertex.h"
+#include <vector>
+#include <fstream>
 
 /*
 	A class specifically designed to create and keep track of geometry.
@@ -11,8 +13,9 @@
 class Mesh 
 {
 public:
-	// Constructor
+	// Constructors
 	Mesh(Vertex* vertArray, int vertsInArray, int* indxArray, int indxsInArray, Microsoft::WRL::ComPtr<ID3D11Device> deviceObj);
+	Mesh(const char* fileName, Microsoft::WRL::ComPtr<ID3D11Device> deviceObj);
 
 	//Destructor
 	~Mesh();

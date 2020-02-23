@@ -1,7 +1,6 @@
 #pragma once
 #include "DXCore.h"	// Used for ID3D11 stuff
 #include <DirectXMath.h>
-//#include <wrl/client.h> // Used for ComPtr - a smart pointer for COM objects
 #include "SimpleShader.h"
 
 class Material 
@@ -12,8 +11,6 @@ public:
 	~Material();
 
 	// Getters
-	//Microsoft::WRL::ComPtr<ID3D11VertexShader> GetVertexShader();
-	//Microsoft::WRL::ComPtr<ID3D11PixelShader> GetPixelShader();
 	SimpleVertexShader* GetVertexShader();
 	SimplePixelShader* GetPixelShader();
 	DirectX::XMFLOAT4 GetMaterialColorTint();
@@ -22,8 +19,6 @@ public:
 	void SetMaterialColorTint(DirectX::XMFLOAT4 inputTint);
 
 private:
-	//Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
-	//Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
 	SimpleVertexShader* vertexShader;
 	SimplePixelShader* pixelShader;
 
