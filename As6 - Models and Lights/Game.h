@@ -7,7 +7,6 @@
 #include "Camera.h"
 #include "Material.h"
 #include "GameEntity.h" // Has Mesh.h included
-#include "BufferStructs.h"
 
 class Game 
 	: public DXCore
@@ -31,11 +30,8 @@ private:
 	void LoadShaders(); 
 
 	// Shaders and shader-related constructs
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
-	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
-
-	Microsoft::WRL::ComPtr<ID3D11Buffer> vsConstantBuffer;
+	SimpleVertexShader* vertexShader;
+	SimplePixelShader* pixelShader;
 
 	// Camera Object
 	Camera* camera = nullptr;

@@ -40,15 +40,6 @@ Game::Game(HINSTANCE hInstance)
 // --------------------------------------------------------
 Game::~Game()
 {
-	// Note: Since we're using smart pointers (ComPtr),
-	// we don't need to explicitly clean up those DirectX objects
-	// - If we weren't using smart pointers, we'd need
-	//   to call Release() on each DirectX object
-
-	// RELEASE CAMERA HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-	delete camera;
-	camera = nullptr;
-
 	// RELEASE GAMEENTITIES HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	delete triangleEntity_01;
 	triangleEntity_01 = nullptr;
@@ -86,6 +77,17 @@ Game::~Game()
 
 	delete mat3;
 	mat3 = nullptr;
+
+	// RELEASE CAMERA HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	delete camera;
+	camera = nullptr;
+
+	// RELEASE SHADERS HERE  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	delete vertexShader;
+	vertexShader = nullptr;
+
+	delete pixelShader;
+	pixelShader = nullptr;
 }
 
 // --------------------------------------------------------
@@ -113,9 +115,9 @@ void Game::Init()
 
 	// --------------------------------------------------------------------------------------
 	// Initialize Material pointer objects
-	mat1 = new Material(pixelShader, vertexShader, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f));
-	mat2 = new Material(pixelShader, vertexShader, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f));
-	mat3 = new Material(pixelShader, vertexShader, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f));
+	mat1 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f));
+	mat2 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f));
+	mat3 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f));
 
 	// --------------------------------------------------------------------------------------
 	// Initialize Mesh pointer objects
@@ -217,23 +219,6 @@ void Game::Init()
 	// geometric primitives (points, lines or triangles) we want to draw.  
 	// Essentially: "What kind of shape should the GPU draw with our data?"
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	// --------------------------------------------------------------------------------------
-	// Initialize constant buffers
-	// Get size of cbuffer as the next multiple of 16
-	unsigned int size = sizeof(VertexShaderExternalData);
-	size = (size + 15) / 16 * 16;
-
-	// Describe the constant buffer
-	D3D11_BUFFER_DESC cbDesc	= {}; // Sets struct to all zeros
-	cbDesc.BindFlags			= D3D11_BIND_CONSTANT_BUFFER;
-	cbDesc.ByteWidth			= size; // Must be a multiple of 16
-	cbDesc.CPUAccessFlags		= D3D11_CPU_ACCESS_WRITE;
-	cbDesc.Usage				= D3D11_USAGE_DYNAMIC;
-
-	// Feed D3D the desc and buffer location to actually create the buffer
-	device->CreateBuffer(&cbDesc, 0, &vsConstantBuffer);
-	// --------------------------------------------------------------------------------------
 }
 
 // --------------------------------------------------------
@@ -246,65 +231,10 @@ void Game::Init()
 // --------------------------------------------------------
 void Game::LoadShaders()
 {
-	// Blob for reading raw data
-	// - This is a simplified way of handling raw data
-	ID3DBlob* shaderBlob;
-
-	// Read our compiled vertex shader code into a blob
-	// - Essentially just "open the file and plop its contents here"
-	D3DReadFileToBlob(
-		GetFullPathTo_Wide(L"VertexShader.cso").c_str(), // Using a custom helper for file paths
-		&shaderBlob);
-
-	// Create a vertex shader from the information we
-	// have read into the blob above
-	// - A blob can give a pointer to its contents, and knows its own size
-	device->CreateVertexShader(
-		shaderBlob->GetBufferPointer(), // Get a pointer to the blob's contents
-		shaderBlob->GetBufferSize(),	// How big is that data?
-		0,								// No classes in this shader
-		vertexShader.GetAddressOf());	// The address of the ID3D11VertexShader*
-
-
-	// Create an input layout that describes the vertex format
-	// used by the vertex shader we're using
-	//  - This is used by the pipeline to know how to interpret the raw data
-	//     sitting inside a vertex buffer
-	//  - Doing this NOW because it requires a vertex shader's byte code to verify against!
-	//  - Luckily, we already have that loaded (the blob above)
-	D3D11_INPUT_ELEMENT_DESC inputElements[2] = {};
-
-	// Set up the first element - a position, which is 3 float values
-	inputElements[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;				// Most formats are described as color channels; really it just means "Three 32-bit floats"
-	inputElements[0].SemanticName = "POSITION";							// This is "POSITION" - needs to match the semantics in our vertex shader input!
-	inputElements[0].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;	// How far into the vertex is this?  Assume it's after the previous element
-
-	// Set up the second element - a color, which is 4 more float values
-	inputElements[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;			// 4x 32-bit floats
-	inputElements[1].SemanticName = "COLOR";							// Match our vertex shader input!
-	inputElements[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;	// After the previous element
-
-	// Create the input layout, verifying our description against actual shader code
-	device->CreateInputLayout(
-		inputElements,					// An array of descriptions
-		2,								// How many elements in that array
-		shaderBlob->GetBufferPointer(),	// Pointer to the code of a shader that uses this layout
-		shaderBlob->GetBufferSize(),	// Size of the shader code that uses this layout
-		inputLayout.GetAddressOf());	// Address of the resulting ID3D11InputLayout*
-
-
-
-	// Read and create the pixel shader
-	//  - Reusing the same blob here, since we're done with the vert shader code
-	D3DReadFileToBlob(
-		GetFullPathTo_Wide(L"PixelShader.cso").c_str(), // Using a custom helper for file paths
-		&shaderBlob);
-
-	device->CreatePixelShader(
-		shaderBlob->GetBufferPointer(),
-		shaderBlob->GetBufferSize(),
-		0,
-		pixelShader.GetAddressOf());
+	vertexShader = new SimpleVertexShader(device.Get(), context.Get(),
+		GetFullPathTo_Wide(L"VertexShader.cso").c_str());
+	pixelShader = new SimplePixelShader(device.Get(), context.Get(),
+		GetFullPathTo_Wide(L"PixelShader.cso").c_str());
 }
 
 // --------------------------------------------------------
@@ -379,60 +309,29 @@ void Game::Draw(float deltaTime, float totalTime)
 		1.0f,
 		0);
 
-	// Set the vertex and pixel shaders to use for the next Draw() command
-	//  - These don't technically need to be set every frame
-	//  - Once you start applying different shaders to different objects,
-	//    you'll need to swap the current shaders before each draw
-	// MOVED TO DRAW LOOP BELOW
-	//context->VSSetShader(vertexShader.Get(), 0, 0);
-	//context->PSSetShader(pixelShader.Get(), 0, 0);
-
-	// Ensure the pipeline knows how to interpret the data (numbers)
-	// from the vertex buffer.  
-	// - If all of your 3D models use the exact same vertex layout,
-	//    this could simply be done once in Init()
-	// - However, this isn't always the case (but might be for this course)
-	context->IASetInputLayout(inputLayout.Get());
-
-	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// Set buffers in the input assembler
-	//  - Do this ONCE PER OBJECT you're drawing, since each object might
-	//    have different geometry.
-	//  - for this demo, this step *could* simply be done once during Init(),
-	//    but I'm doing it here because it's often done multiple times per frame
-	//    in a larger application/game
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
-
-	VertexShaderExternalData vsData; // For assigning data to cbuffer for VS in the following loop
 
 	for (int i = 0; i < entityVector.size(); i++) 
 	{
 		context->IASetVertexBuffers(0, 1, entityVector[i]->GetMesh()->GetVertexBuffer().GetAddressOf(), &stride, &offset);
 		context->IASetIndexBuffer(entityVector[i]->GetMesh()->GetIndexBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 
+		// Set the vertex and pixel shaders to use for the next Draw() command
+			//  - These don't technically need to be set every frame
+			//  - Once you start applying different shaders to different objects,
+			//    you'll need to swap the current shaders before each draw
+		entityVector[i]->GetMaterial()->GetVertexShader()->SetShader();
+		entityVector[i]->GetMaterial()->GetPixelShader()->SetShader();
+
 		// Assigning data to Constant Buffer for Vertex Shader
-		context->VSSetShader(entityVector[i]->GetMaterial()->GetVertexShader().Get(), 0, 0);
-		context->PSSetShader(entityVector[i]->GetMaterial()->GetPixelShader().Get(), 0, 0);
+		SimpleVertexShader* vs = entityVector[i]->GetMaterial()->GetVertexShader();
+		vs->SetFloat4("colorTint", entityVector[i]->GetMaterial()->GetMaterialColorTint());
+		vs->SetMatrix4x4("world", entityVector[i]->GetTransform()->GetWorldMatrix());
+		vs->SetMatrix4x4("view", camera->GetViewMatrix());
+		vs->SetMatrix4x4("projection", camera->GetProjectionMatrix());
 
-		//vsData.colorTint = XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);
-		vsData.colorTint = entityVector[i]->GetMaterial()->GetMaterialColorTint();
-		vsData.worldMatrix = entityVector[i]->GetTransform()->GetWorldMatrix();
-		vsData.viewMatrix = camera->GetViewMatrix();
-		vsData.projectionMatrix = camera->GetProjectionMatrix();
-
-		D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
-		context->Map(vsConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
-
-		memcpy(mappedBuffer.pData, &vsData, sizeof(vsData));
-
-		context->Unmap(vsConstantBuffer.Get(), 0);
-
-		context->VSSetConstantBuffers(
-			0,		// Which slot (register) to bind the buffer to?
-			1,		// How many are we activating? Can do multiple at once
-			vsConstantBuffer.GetAddressOf()	// Array of buffers (or the address of one)
-		);
+		vs->CopyAllBufferData();
 
 		// Finally, do the actual drawing
 		//  - Do this ONCE PER OBJECT you intend to draw

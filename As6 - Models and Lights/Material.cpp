@@ -1,7 +1,7 @@
 #include "Material.h"
 
 // Constructor
-Material::Material(Microsoft::WRL::ComPtr<ID3D11PixelShader> pxlShdr, Microsoft::WRL::ComPtr<ID3D11VertexShader> vtxShdr, DirectX::XMFLOAT4 mColTint)
+Material::Material(SimpleVertexShader* vtxShdr, SimplePixelShader* pxlShdr, DirectX::XMFLOAT4 mColTint)
 {
 	vertexShader = vtxShdr;
 	pixelShader = pxlShdr;
@@ -13,9 +13,9 @@ Material::Material(Microsoft::WRL::ComPtr<ID3D11PixelShader> pxlShdr, Microsoft:
 Material::~Material() {}
 
 // Getters
-Microsoft::WRL::ComPtr<ID3D11VertexShader> Material::GetVertexShader() { return vertexShader; }
+SimpleVertexShader* Material::GetVertexShader() { return vertexShader; }
 
-Microsoft::WRL::ComPtr<ID3D11PixelShader> Material::GetPixelShader() { return pixelShader; }
+SimplePixelShader* Material::GetPixelShader() { return pixelShader; }
 
 DirectX::XMFLOAT4 Material::GetMaterialColorTint() { return matColorTint; }
 
