@@ -10,7 +10,7 @@ struct DirectionalLight
 
 cbuffer ExternalPSData : register(b0) 
 {
-	DirectionalLight dirLight;
+	DirectionalLight directionalLight;
 }
 
 // Struct representing the data we expect to receive from earlier pipeline stages
@@ -44,7 +44,7 @@ float4 main(VertexToPixel input) : SV_TARGET
 	input.normal = normalize(input.normal);
 	//return float4(input.normal, 1);
 	
-	return float4(dirLight.DiffuseColor, 1);	//temporary	// CANT TELL IF THIS IS WORKING, ITS JUST BLACK
+	return float4(directionalLight.DiffuseColor, 1);	//temporary
 
 	// Just return the input color
 	// - This color (like most values passing through the rasterizer) is 
