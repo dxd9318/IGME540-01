@@ -47,17 +47,27 @@ Game::~Game()
 	delete squareEntity_01;
 	squareEntity_01 = nullptr;
 
-	delete squareEntity_02;
-	squareEntity_02 = nullptr;
-
 	delete circleEntity_01;
 	circleEntity_01 = nullptr;
 
-	delete circleEntity_02;
-	circleEntity_02 = nullptr;
+
+	delete coneEntity_01;
+	coneEntity_01 = nullptr;
+
+	delete cubeEntity_01;
+	cubeEntity_01 = nullptr;
+
+	delete cylinderEntity_01;
+	cylinderEntity_01 = nullptr;
+
+	delete helixEntity_01;
+	helixEntity_01 = nullptr;
 
 	delete sphereEntity_01;
 	sphereEntity_01 = nullptr;
+
+	delete torusEntity_01;
+	torusEntity_01 = nullptr;
 
 	entityVector.clear();
 
@@ -71,8 +81,24 @@ Game::~Game()
 	delete circleMesh;
 	circleMesh = nullptr;
 
+
+	delete coneMesh;
+	coneMesh = nullptr;
+
+	delete cubeMesh;
+	cubeMesh = nullptr;
+
+	delete cylinderMesh;
+	cylinderMesh = nullptr;
+
+	delete helixMesh;
+	helixMesh = nullptr;
+	
 	delete sphereMesh;
 	sphereMesh = nullptr;
+
+	delete torusMesh;
+	torusMesh = nullptr;
 
 	// RELEASE MATERIAL POINTERS HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	delete mat1;
@@ -83,6 +109,18 @@ Game::~Game()
 
 	delete mat3;
 	mat3 = nullptr;
+
+	delete mat4;
+	mat4 = nullptr;
+
+	delete mat5;
+	mat5 = nullptr;
+
+	delete mat6;
+	mat6 = nullptr;
+
+	delete mat7;
+	mat7 = nullptr;
 
 	// RELEASE CAMERA HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	delete camera;
@@ -111,18 +149,18 @@ void Game::Init()
 	// Init Lights
 	// Yellow light
 	dirLight_01.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.2f);
-	dirLight_01.diffuseColor = DirectX::XMFLOAT3(1, 1, 0);
-	dirLight_01.direction = DirectX::XMFLOAT3(0, 0, -3);
+	dirLight_01.diffuseColor = DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f);
+	dirLight_01.direction = DirectX::XMFLOAT3(0.0f, 0.0f, -3.0f);
 
 	// Cyan light
 	dirLight_02.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
-	dirLight_02.diffuseColor = DirectX::XMFLOAT3(0, 0.5, 1);
-	dirLight_02.direction = DirectX::XMFLOAT3(-1, 1, 0);
+	dirLight_02.diffuseColor = DirectX::XMFLOAT3(0.0f, 0.5f, 1.0f);
+	dirLight_02.direction = DirectX::XMFLOAT3(-1.0f, 1.0f, 0.0f);
 
-	// ??? light
+	// Pinkish light
 	dirLight_03.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
-	dirLight_03.diffuseColor = DirectX::XMFLOAT3(0.3, 0.6, 0.3);
-	dirLight_03.direction = DirectX::XMFLOAT3(1, 1, 0.2f);
+	dirLight_03.diffuseColor = DirectX::XMFLOAT3(0.6f, 0.3f, 0.3f);
+	dirLight_03.direction = DirectX::XMFLOAT3(2.0f, 2.0f, 0.2f);
 
 	// --------------------------------------------------------------------------------------
 	// Init Camera
@@ -142,6 +180,12 @@ void Game::Init()
 	mat2 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f));
 	mat3 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f));
 
+	mat4 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 0.0f));;	// cyan
+	mat5 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 0.0f));	// yellow
+	mat6 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 0.0f));	// magenta
+
+	mat7 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f));	// white
+	
 	// --------------------------------------------------------------------------------------
 	// Initialize Mesh pointer objects
 	// Create some temporary variables to represent colors
@@ -152,9 +196,9 @@ void Game::Init()
 	// Mesh object 1 - Basic Triangle	// REMEMBER, CLOCKWISE!!!
 	Vertex triangleVertices[] =
 	{
-		{ XMFLOAT3(-0.75f, +1.0f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
-		{ XMFLOAT3(-0.5f, +0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
-		{ XMFLOAT3(-1.0f, +0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(+0.0f, +0.25f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(+0.25f, -0.25f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(-0.25f, -0.25f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
 	};
 	int triangleIndices[] = { 0, 1, 2 };
 	triangleMesh = new Mesh(triangleVertices, 3, triangleIndices, 3, device);
@@ -162,10 +206,10 @@ void Game::Init()
 	// Mesh object 2 - Rectangle
 	Vertex rectangleVertices[] =
 	{
-		{ XMFLOAT3(+0.5f, +1.0f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
-		{ XMFLOAT3(+1.0f, +1.0f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
-		{ XMFLOAT3(+1.0f, +0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
-		{ XMFLOAT3(+0.5f, +0.5f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(-0.25f, +0.25f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(+0.25f, +0.25f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(+0.25f, -0.25f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
+		{ XMFLOAT3(-0.25f, -0.25f, +0.0f), XMFLOAT3(0,0,-1), XMFLOAT2(0,0) },
 	};
 	int rectangleIndices[] = { 0, 1, 2, 0, 2, 3 };	//0, 1, 2	//0, 2, 3
 	rectangleMesh = new Mesh(rectangleVertices, 4, rectangleIndices, 6, device);
@@ -223,27 +267,36 @@ void Game::Init()
 	};
 	circleMesh = new Mesh(circleVertices, 13, circleIndices, 36, device);
 
+	coneMesh = new Mesh(GetFullPathTo("../../Assets/Models/cone.obj").c_str(), device);
+	cubeMesh = new Mesh(GetFullPathTo("../../Assets/Models/cube.obj").c_str(), device);
+	cylinderMesh = new Mesh(GetFullPathTo("../../Assets/Models/cylinder.obj").c_str(), device);
+	helixMesh = new Mesh(GetFullPathTo("../../Assets/Models/helix.obj").c_str(), device);
 	sphereMesh = new Mesh(GetFullPathTo("../../Assets/Models/sphere.obj").c_str(), device);
+	torusMesh = new Mesh(GetFullPathTo("../../Assets/Models/torus.obj").c_str(), device);
 
 	// --------------------------------------------------------------------------------------
 	// Create and store entities
 	triangleEntity_01 = new GameEntity(triangleMesh, mat1);
 	squareEntity_01 = new GameEntity(rectangleMesh, mat2);
-	squareEntity_02 = new GameEntity(rectangleMesh, mat3);
-	circleEntity_01 = new GameEntity(circleMesh, mat1);
-	circleEntity_02 = new GameEntity(circleMesh, mat2);
+	circleEntity_01 = new GameEntity(circleMesh, mat3);
 
-	sphereEntity_01 = new GameEntity(sphereMesh, mat1);
-
+	coneEntity_01 = new GameEntity(coneMesh, mat4);
+	cubeEntity_01 = new GameEntity(cubeMesh, mat7);
+	cylinderEntity_01 = new GameEntity(cylinderMesh, mat5);
+	helixEntity_01 = new GameEntity(helixMesh, mat7);
+	sphereEntity_01 = new GameEntity(sphereMesh, mat6);
+	torusEntity_01 = new GameEntity(torusMesh, mat7);
 
 	entityVector.push_back(triangleEntity_01);
 	entityVector.push_back(squareEntity_01);
-	entityVector.push_back(squareEntity_02);
 	entityVector.push_back(circleEntity_01);
-	entityVector.push_back(circleEntity_02);
 	
+	entityVector.push_back(coneEntity_01);
+	entityVector.push_back(cubeEntity_01);
+	entityVector.push_back(cylinderEntity_01);
+	entityVector.push_back(helixEntity_01);
 	entityVector.push_back(sphereEntity_01);
-
+	entityVector.push_back(torusEntity_01);
 
 	// --------------------------------------------------------------------------------------
 	// Tell the input assembler stage of the pipeline what kind of
@@ -293,35 +346,47 @@ void Game::Update(float deltaTime, float totalTime)
 	if (GetAsyncKeyState(VK_ESCAPE))
 		Quit();
 
-	// triangle 1
-	entityVector[0]->GetTransform()->SetScale(0.5f, 0.75f, 1.0f);
-
-	// rectangle 1
-	entityVector[1]->GetTransform()->SetPosition(0.0f, -1.0f, 1.0f);
-	entityVector[1]->GetTransform()->SetRotation(0.0f, 0.0f, XM_PIDIV4);
-	entityVector[1]->GetTransform()->SetScale(0.25f, 0.25f, 1.0f);
-
-	// rect 2
-	static float decrementX = 0;
-	entityVector[2]->GetTransform()->SetPosition(decrementX, 0.0f, 2.0f);
-	decrementX -= 0.000005f;
-	entityVector[2]->GetTransform()->SetScale(1.0f, 0.5f, 1.0f);
-
-	// circle 1
-	entityVector[3]->GetTransform()->SetPosition(0.5f, -0.75f, 3.0f);
-	entityVector[3]->GetTransform()->SetScale(0.15f, 0.15f, 1.0f);
+	// triangle 1	// rotating
 	static float rotateAngle = 0;
-	entityVector[3]->GetTransform()->SetRotation(0.0f, 0.0f, rotateAngle);
+	entityVector[0]->GetTransform()->SetPosition(-1.5f, 1.25f, 0.1f);
+	entityVector[0]->GetTransform()->SetScale(0.75f, 0.75f, 0.75f);
+	entityVector[0]->GetTransform()->SetRotation(0.0f, 0.0f, rotateAngle);
 	rotateAngle += XM_PI / 20000;
 
-	// circle 2 
-	float scaleChange = sin(rotateAngle) / 10;
-	entityVector[4]->GetTransform()->SetPosition(0.75f, 0.75f, 4.0f);
-	entityVector[4]->GetTransform()->SetScale(scaleChange, scaleChange, 1.0f);
+	// rectangle 1	// shifting
+	entityVector[1]->GetTransform()->SetPosition(-1.5f + (cos(rotateAngle) / 7.5f), 0.0f, 0.2f);
+	entityVector[1]->GetTransform()->SetScale(0.75f, 0.75f, 1.0f);
+
+	// circle 1		// pulsating
+	float scaleChange = sin(rotateAngle) / 2.5f;
+	entityVector[2]->GetTransform()->SetPosition(-1.5f, -1.25f, 0.3f);
+	entityVector[2]->GetTransform()->SetScale(scaleChange, scaleChange, 1.0f);
+
+
+	// Cone 1
+	entityVector[3]->GetTransform()->SetPosition(-0.5f, 1.0f, 0.5f);
+	entityVector[3]->GetTransform()->SetScale(0.5f, 0.5f, 0.5f);
+
+	// Cube 1
+	entityVector[4]->GetTransform()->SetPosition(0.25f, 1.0f, 0.5f);
+	entityVector[4]->GetTransform()->SetScale(0.5f, 0.5f, 0.5f);
+
+	// Cylinder 1
+	entityVector[5]->GetTransform()->SetPosition(1.0f, 1.0f, 0.5f);
+	entityVector[5]->GetTransform()->SetScale(0.5f, 0.5f, 0.5f);
+
+	// Helix 1
+	entityVector[6]->GetTransform()->SetPosition(-0.5f, -1.0f, 0.5f);
+	entityVector[6]->GetTransform()->SetScale(0.25f, 0.25f, 0.25f);
 
 	// Sphere 1
-	entityVector[5]->GetTransform()->SetPosition(-0.75f, -0.75f, 5.0f);
-	entityVector[5]->GetTransform()->SetScale(0.25f, 0.25f, 0.25f);
+	entityVector[7]->GetTransform()->SetPosition(0.25f, -1.0f, 0.5f);
+	entityVector[7]->GetTransform()->SetScale(0.5f, 0.5f, 0.5f);
+
+	// Torus 1
+	entityVector[8]->GetTransform()->SetPosition(1.0f, -1.0f, 0.5f);
+	entityVector[8]->GetTransform()->SetScale(0.5f, 0.5f, 0.5f);
+	entityVector[8]->GetTransform()->SetRotation(-XM_PIDIV4, 0.0f, 0.0f);
 
 	camera->Update(deltaTime, this->hWnd);
 }
