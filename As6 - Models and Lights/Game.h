@@ -35,7 +35,9 @@ private:
 	SimplePixelShader* pixelShader;
 
 	// Light Objects
-	DirectionalLight dirLight;
+	DirectionalLight dirLight_01;
+	DirectionalLight dirLight_02;
+	DirectionalLight dirLight_03;
 
 	// Camera Objects
 	Camera* camera = nullptr;

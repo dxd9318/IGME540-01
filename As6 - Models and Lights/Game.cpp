@@ -109,9 +109,20 @@ void Game::Init()
 
 	// --------------------------------------------------------------------------------------
 	// Init Lights
-	dirLight.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.2f);
-	dirLight.diffuseColor = DirectX::XMFLOAT3(1, 1, 0);
-	dirLight.direction = DirectX::XMFLOAT3(0, 0, 1);
+	// Yellow light
+	dirLight_01.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.2f);
+	dirLight_01.diffuseColor = DirectX::XMFLOAT3(1, 1, 0);
+	dirLight_01.direction = DirectX::XMFLOAT3(0, 0, -3);
+
+	// Cyan light
+	dirLight_02.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
+	dirLight_02.diffuseColor = DirectX::XMFLOAT3(0, 0.5, 1);
+	dirLight_02.direction = DirectX::XMFLOAT3(-1, 1, 0);
+
+	// ??? light
+	dirLight_03.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
+	dirLight_03.diffuseColor = DirectX::XMFLOAT3(0.3, 0.6, 0.3);
+	dirLight_03.direction = DirectX::XMFLOAT3(1, 1, 0.2f);
 
 	// --------------------------------------------------------------------------------------
 	// Init Camera
@@ -358,9 +369,19 @@ void Game::Draw(float deltaTime, float totalTime)
 		vs->CopyAllBufferData();
 
 		pixelShader->SetData(
-			"directionalLight",			// The name of the (eventual) variable in the shader
-			&dirLight,					// The address of the data to set
-			sizeof(DirectionalLight));	// The size of data to set
+			"directionalLight1",			// The name of the (eventual) variable in the shader
+			&dirLight_01,					// The address of the data to set
+			sizeof(DirectionalLight));		// The size of data to set
+
+		pixelShader->SetData(
+			"directionalLight2",			// The name of the (eventual) variable in the shader
+			&dirLight_02,					// The address of the data to set
+			sizeof(DirectionalLight));		// The size of data to set
+
+		pixelShader->SetData(
+			"directionalLight3",			// The name of the (eventual) variable in the shader
+			&dirLight_03,					// The address of the data to set
+			sizeof(DirectionalLight));		// The size of data to set
 
 		pixelShader->CopyAllBufferData();
 

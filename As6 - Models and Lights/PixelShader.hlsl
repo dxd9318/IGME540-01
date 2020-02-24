@@ -10,7 +10,9 @@ struct DirectionalLight
 
 cbuffer ExternalPSData : register(b0) 
 {
-	DirectionalLight directionalLight;
+	DirectionalLight directionalLight1;
+	DirectionalLight directionalLight2;
+	DirectionalLight directionalLight3;
 }
 
 // Struct representing the data we expect to receive from earlier pipeline stages
@@ -30,6 +32,23 @@ struct VertexToPixel
 	float3 normal		: NORMAL;
 };
 
+float3 calculateFinalLightColor(VertexToPixel input, DirectionalLight light)
+{
+	// Normalized direction TO the light
+	float3 lightDir = normalize(-light.Direction);
+
+	input.normal = normalize(input.normal);
+
+	// Calculate light amount (Normal-dot-LightDirection)
+	float dotResult = saturate(dot(input.normal, lightDir));	// clamped between 0 and 1
+
+	// Calculate final pixel color
+	// dotResult * diffuseColor * colorTint + ambientColor * colorTint
+	float3 finalColor = dotResult * light.DiffuseColor * input.color + light.AmbientColor * input.color;
+
+	return float3(finalColor);
+};
+
 // --------------------------------------------------------
 // The entry point (main method) for our pixel shader
 // 
@@ -41,26 +60,29 @@ struct VertexToPixel
 // --------------------------------------------------------
 float4 main(VertexToPixel input) : SV_TARGET
 {
-	// Normalized direction TO the light
-	float3 lightDir = normalize(-directionalLight.Direction);
+	//// Normalized direction TO the light
+	//float3 lightDir = normalize(-directionalLight.Direction);
+	//input.normal = normalize(input.normal);
+	//// Calculate light amount (Normal-dot-LightDirection)
+	//float dotResult = saturate(dot(input.normal, lightDir));	// clamped between 0 and 1
+	//// Calculate final pixel color
+	//// dotResult * diffuseColor * colorTint + ambientColor * colorTint
+	//float3 finalColor = dotResult * directionalLight.DiffuseColor * input.color + directionalLight.AmbientColor * input.color;
+	//return float4(finalColor, 1);
 
-	input.normal = normalize(input.normal);
+	return float4(
+		calculateFinalLightColor(input, directionalLight1) +
+			calculateFinalLightColor(input, directionalLight2) +
+			calculateFinalLightColor(input, directionalLight3), 
+		1);
 
-	// Calculate light amount (Normal-dot-LightDirection)
-	float dotResult = saturate(dot(input.normal, lightDir));	// clamped between 0 and 1
+//return float4(input.normal, 1);
+//return float4(directionalLight.DiffuseColor, 1);
 
-	// Calculate final pixel color
-	// dotResult * diffuseColor * colorTint + ambientColor * colorTint
-	float3 finalColor = dotResult * directionalLight.DiffuseColor * input.color + directionalLight.AmbientColor * input.color;
+// Just return the input color
+// - This color (like most values passing through the rasterizer) is 
+//   interpolated for each pixel between the corresponding vertices 
+//   of the triangle we're rendering
+//return input.color;
+};
 
-	return float4(finalColor, 1);
-
-	//return float4(input.normal, 1);
-	//return float4(directionalLight.DiffuseColor, 1);
-
-	// Just return the input color
-	// - This color (like most values passing through the rasterizer) is 
-	//   interpolated for each pixel between the corresponding vertices 
-	//   of the triangle we're rendering
-	//return input.color;
-}
