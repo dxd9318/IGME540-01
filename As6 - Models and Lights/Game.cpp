@@ -109,9 +109,9 @@ void Game::Init()
 
 	// --------------------------------------------------------------------------------------
 	// Init Lights
-	dirLight.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
+	dirLight.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.2f);
 	dirLight.diffuseColor = DirectX::XMFLOAT3(1, 1, 0);
-	dirLight.direction = DirectX::XMFLOAT3(1, -1, 0);
+	dirLight.direction = DirectX::XMFLOAT3(0, 0, 1);
 
 	// --------------------------------------------------------------------------------------
 	// Init Camera
