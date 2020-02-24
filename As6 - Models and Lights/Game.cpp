@@ -56,6 +56,9 @@ Game::~Game()
 	delete circleEntity_02;
 	circleEntity_02 = nullptr;
 
+	delete sphereEntity_01;
+	sphereEntity_01 = nullptr;
+
 	entityVector.clear();
 
 	// RELEASE MESH POINTERS HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -67,6 +70,9 @@ Game::~Game()
 
 	delete circleMesh;
 	circleMesh = nullptr;
+
+	delete sphereMesh;
+	sphereMesh = nullptr;
 
 	// RELEASE MATERIAL POINTERS HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	delete mat1;
@@ -200,6 +206,8 @@ void Game::Init()
 	};
 	circleMesh = new Mesh(circleVertices, 13, circleIndices, 36, device);
 
+	sphereMesh = new Mesh(GetFullPathTo("../../Assets/Models/sphere.obj").c_str(), device);
+
 	// --------------------------------------------------------------------------------------
 	// Create and store entities
 	triangleEntity_01 = new GameEntity(triangleMesh, mat1);
@@ -208,11 +216,17 @@ void Game::Init()
 	circleEntity_01 = new GameEntity(circleMesh, mat1);
 	circleEntity_02 = new GameEntity(circleMesh, mat2);
 
+	sphereEntity_01 = new GameEntity(sphereMesh, mat1);
+
+
 	entityVector.push_back(triangleEntity_01);
 	entityVector.push_back(squareEntity_01);
 	entityVector.push_back(squareEntity_02);
 	entityVector.push_back(circleEntity_01);
 	entityVector.push_back(circleEntity_02);
+	
+	entityVector.push_back(sphereEntity_01);
+
 
 	// --------------------------------------------------------------------------------------
 	// Tell the input assembler stage of the pipeline what kind of

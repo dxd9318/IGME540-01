@@ -41,10 +41,13 @@ private:
 	Material* mat2 = nullptr;
 	Material* mat3 = nullptr;
 
-	// Mesh Objects
+	// Mesh Objects - Hardcoded
 	Mesh* triangleMesh = nullptr;
 	Mesh* rectangleMesh = nullptr;
 	Mesh* circleMesh = nullptr;
+
+	// Mesh Objects - File loaded
+	Mesh* sphereMesh = nullptr;
 
 	// Entity Objects
 	GameEntity* triangleEntity_01 = nullptr;
@@ -52,6 +55,7 @@ private:
 	GameEntity* squareEntity_02 = nullptr;
 	GameEntity* circleEntity_01 = nullptr;
 	GameEntity* circleEntity_02 = nullptr;
+	GameEntity* sphereEntity_01 = nullptr;
 	std::vector<GameEntity*> entityVector = {};
 };
 
