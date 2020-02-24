@@ -1,4 +1,18 @@
 
+struct DirectionalLight
+{
+	float3 AmbientColor;
+	// padding would go here
+	float3 DiffuseColor;
+	// padding would go here
+	float3 Direction;
+};
+
+cbuffer ExternalPSData : register(b0) 
+{
+	DirectionalLight dirLight;
+}
+
 // Struct representing the data we expect to receive from earlier pipeline stages
 // - Should match the output of our corresponding vertex shader
 // - The name of the struct itself is unimportant
@@ -13,6 +27,7 @@ struct VertexToPixel
 	//  v    v                v
 	float4 position		: SV_POSITION;
 	float4 color		: COLOR;
+	float3 normal		: NORMAL;
 };
 
 // --------------------------------------------------------
@@ -26,6 +41,11 @@ struct VertexToPixel
 // --------------------------------------------------------
 float4 main(VertexToPixel input) : SV_TARGET
 {
+	input.normal = normalize(input.normal);
+	//return float4(input.normal, 1);
+	
+	return float4(dirLight.DiffuseColor, 1);	//temporary	// CANT TELL IF THIS IS WORKING, ITS JUST BLACK
+
 	// Just return the input color
 	// - This color (like most values passing through the rasterizer) is 
 	//   interpolated for each pixel between the corresponding vertices 

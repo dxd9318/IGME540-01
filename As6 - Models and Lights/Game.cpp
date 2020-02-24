@@ -108,6 +108,12 @@ void Game::Init()
 	LoadShaders();
 
 	// --------------------------------------------------------------------------------------
+	// Init Lights
+	dirLight.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
+	dirLight.diffuseColor = DirectX::XMFLOAT3(1, 1, 0);
+	dirLight.direction = DirectX::XMFLOAT3(1, -1, 0);
+
+	// --------------------------------------------------------------------------------------
 	// Init Camera
 	camera = new Camera(
 		DirectX::XMFLOAT3(0.0f, 0.0f, -5.0f),	// camera start position
@@ -302,6 +308,10 @@ void Game::Update(float deltaTime, float totalTime)
 	entityVector[4]->GetTransform()->SetPosition(0.75f, 0.75f, 4.0f);
 	entityVector[4]->GetTransform()->SetScale(scaleChange, scaleChange, 1.0f);
 
+	// Sphere 1
+	entityVector[5]->GetTransform()->SetPosition(-0.75f, -0.75f, 5.0f);
+	entityVector[5]->GetTransform()->SetScale(0.25f, 0.25f, 0.25f);
+
 	camera->Update(deltaTime, this->hWnd);
 }
 
@@ -346,6 +356,13 @@ void Game::Draw(float deltaTime, float totalTime)
 		vs->SetMatrix4x4("projection", camera->GetProjectionMatrix());
 
 		vs->CopyAllBufferData();
+
+		pixelShader->SetData(
+			"directionalLight",			// The name of the (eventual) variable in the shader
+			&dirLight,					// The address of the data to set
+			sizeof(DirectionalLight));	// The size of data to set
+
+		pixelShader->CopyAllBufferData();
 
 		// Finally, do the actual drawing
 		//  - Do this ONCE PER OBJECT you intend to draw

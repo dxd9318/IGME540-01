@@ -4,6 +4,7 @@
 #include <DirectXMath.h>
 #include <wrl/client.h> // Used for ComPtr - a smart pointer for COM objects
 #include <vector>
+#include "Lights.h"
 #include "Camera.h"
 #include "Material.h"
 #include "GameEntity.h" // Has Mesh.h included
@@ -33,7 +34,10 @@ private:
 	SimpleVertexShader* vertexShader;
 	SimplePixelShader* pixelShader;
 
-	// Camera Object
+	// Light Objects
+	DirectionalLight dirLight;
+
+	// Camera Objects
 	Camera* camera = nullptr;
 
 	// Material Objects
