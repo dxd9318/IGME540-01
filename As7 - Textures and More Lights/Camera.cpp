@@ -106,8 +106,8 @@ void Camera::Update(float dt, HWND windowHandle)
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) 
 	{
 		// rotate camera based on how much mouse has moved
-		float deltaCamPosX = prevMousePos.x - mousePos.x; 
-		float deltaCamPosY = prevMousePos.y - mousePos.y;
+		float deltaCamPosX = (float)prevMousePos.x - (float)mousePos.x;
+		float deltaCamPosY = (float)prevMousePos.y - (float)mousePos.y;
 
 		// rotate camera((mouseLookSpeed * dt * -deltaCamPosY) as pitch,  (mouseLookSpeed * dt * -deltaCamPosX)as yaw, 0 as roll)
 		cameraTransform.Rotate(mouseLookSpeed * dt * -deltaCamPosY, mouseLookSpeed * dt * -deltaCamPosX, 0.0f);
