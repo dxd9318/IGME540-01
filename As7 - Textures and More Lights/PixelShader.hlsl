@@ -23,7 +23,7 @@ cbuffer ExternalPSData : register(b0)
 	DirectionalLight directionalLight2;
 	DirectionalLight directionalLight3;
 
-	//PointLight pointLight1;
+	PointLight pointLight1;
 }
 
 // Struct representing the data we expect to receive from earlier pipeline stages
@@ -46,7 +46,7 @@ struct VertexToPixel
 
 /*
 	For directional lights, input the negated light direction for the lightDirection input.
-	For point lights, calculate input.worldPos - light.position and use the result as the lightDirection input.
+	For point lights, calculate (input.worldPos - pointLight.position) and use the result as the lightDirection input.
 */
 float3 calculateLightColor(VertexToPixel input, float3 lightDirection, float3 lightDiffuseColor, float3 lightAmbientColor) 
 {
@@ -58,32 +58,11 @@ float3 calculateLightColor(VertexToPixel input, float3 lightDirection, float3 li
 	// Calculate light amount (Normal-dot-LightDirection)
 	float dotResult = saturate(dot(input.normal, lightDir));	// clamped between 0 and 1
 
-	// Calculate final pixel color
-	// dotResult * diffuseColor * colorTint + ambientColor * colorTint
+	// Calculate final pixel color			// dotResult * diffuseColor * colorTint + ambientColor * colorTint
 	float3 finalColor = dotResult * lightDiffuseColor * input.color.rgb + lightAmbientColor * input.color.rgb;
-
 
 	return float3(finalColor);
 }
-
-float3 calculateFinalLightColor(VertexToPixel input, DirectionalLight light)	//change this to take lightDirection, lightDiffuseColor, and lightAmbientColor instead of a light object
-{
-	// Normalized direction TO the light
-	float3 lightDir = normalize(-light.Direction);
-
-	input.normal = normalize(input.normal);
-
-	// Calculate light amount (Normal-dot-LightDirection)
-	float dotResult = saturate(dot(input.normal, lightDir));	// clamped between 0 and 1
-
-	// Calculate final pixel color
-	// dotResult * diffuseColor * colorTint + ambientColor * colorTint
-	float3 finalColor = dotResult * light.DiffuseColor * input.color.rgb + light.AmbientColor * input.color.rgb;
-
-
-	return float3(finalColor);
-};
-
 
 // --------------------------------------------------------
 // The entry point (main method) for our pixel shader
@@ -96,36 +75,11 @@ float3 calculateFinalLightColor(VertexToPixel input, DirectionalLight light)	//c
 // --------------------------------------------------------
 float4 main(VertexToPixel input) : SV_TARGET
 {
-	//// Normalized direction TO the light
-	//float3 lightDir = normalize(-directionalLight.Direction);
-	//input.normal = normalize(input.normal);
-	//// Calculate light amount (Normal-dot-LightDirection)
-	//float dotResult = saturate(dot(input.normal, lightDir));	// clamped between 0 and 1
-	//// Calculate final pixel color
-	//// dotResult * diffuseColor * colorTint + ambientColor * colorTint
-	//float3 finalColor = dotResult * directionalLight.DiffuseColor * input.color + directionalLight.AmbientColor * input.color;
-	//return float4(finalColor, 1);
-
 	return float4(
 		calculateLightColor(input, -directionalLight1.Direction, directionalLight1.DiffuseColor, directionalLight1.AmbientColor) +
 			calculateLightColor(input, -directionalLight2.Direction, directionalLight2.DiffuseColor, directionalLight2.AmbientColor) +
-			calculateLightColor(input, -directionalLight3.Direction, directionalLight3.DiffuseColor, directionalLight3.AmbientColor),
+			calculateLightColor(input, -directionalLight3.Direction, directionalLight3.DiffuseColor, directionalLight3.AmbientColor) + 
+			calculateLightColor(input, -(input.worldPos - pointLight1.Position), pointLight1.DiffuseColor, pointLight1.AmbientColor),
 		1.0f);
-
-	//return float4(
-	//	calculateFinalLightColor(input, directionalLight1) +
-	//		calculateFinalLightColor(input, directionalLight2) +
-	//		calculateFinalLightColor(input, directionalLight3) /* + calculateFinalLightColor(input, pointLight1) */, 
-	//	1.0f);
-
-	
-//return float4(input.normal, 1);
-//return float4(directionalLight.DiffuseColor, 1);
-
-// Just return the input color
-// - This color (like most values passing through the rasterizer) is 
-//   interpolated for each pixel between the corresponding vertices 
-//   of the triangle we're rendering
-//return input.color;
 };
 

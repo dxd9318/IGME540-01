@@ -147,25 +147,26 @@ void Game::Init()
 
 	// --------------------------------------------------------------------------------------
 	// Init Directional Lights
-	// Yellow light
+	// Yellow light, points towards camera startPos from behind geometry
 	dirLight_01.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.2f);
 	dirLight_01.diffuseColor = DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f);
 	dirLight_01.direction = DirectX::XMFLOAT3(0.0f, 0.0f, -3.0f);
 
-	// Cyan light
+	// Cyan light, points down from above geometry
 	dirLight_02.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
 	dirLight_02.diffuseColor = DirectX::XMFLOAT3(0.0f, 0.5f, 1.0f);
-	dirLight_02.direction = DirectX::XMFLOAT3(-1.0f, 1.0f, 0.0f);
+	dirLight_02.direction = DirectX::XMFLOAT3(0.0f, -3.0f, 0.0f);
 
-	// Pinkish light
+	// Pinkish light, points up from below geometry
 	dirLight_03.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
 	dirLight_03.diffuseColor = DirectX::XMFLOAT3(0.6f, 0.3f, 0.3f);
-	dirLight_03.direction = DirectX::XMFLOAT3(2.0f, 2.0f, 0.2f);
+	dirLight_03.direction = DirectX::XMFLOAT3(0.0f, 2.0f, 0.0f);
 
 	// Init Point Lights
-	/*ptLight_01.ambientColor = DirectX::XMFLOAT3(, , );
-	ptLight_01.diffuseColor = DirectX::XMFLOAT3(, , );
-	ptLight_01.position = DirectX::XMFLOAT3(, , );*/
+	// Green light, points right from left of geometry
+	ptLight_01.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
+	ptLight_01.diffuseColor = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+	ptLight_01.position = DirectX::XMFLOAT3(-3.0f, 0.0f, 0.0f);
 
 	// --------------------------------------------------------------------------------------
 	// Init Camera
@@ -455,10 +456,10 @@ void Game::Draw(float deltaTime, float totalTime)
 			sizeof(DirectionalLight));		// The size of data to set
 
 		// Set point light data in pixel shader
-		//pixelShader->SetData(
-		//	"pointLight1",				// The name of the (eventual) variable in the shader
-		//	&ptLight_01,				// The address of the data to set
-		//	sizeof(PointLight));		// The size of data to set
+		pixelShader->SetData(
+			"pointLight1",				// The name of the (eventual) variable in the shader
+			&ptLight_01,				// The address of the data to set
+			sizeof(PointLight));		// The size of data to set
 
 		pixelShader->CopyAllBufferData();
 
