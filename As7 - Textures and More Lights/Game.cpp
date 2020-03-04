@@ -182,15 +182,15 @@ void Game::Init()
 
 	// --------------------------------------------------------------------------------------
 	// Initialize Material pointer objects
-	mat1 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f));
-	mat2 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f));
-	mat3 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f));
+	mat1 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f), 1.0f);	// red
+	mat2 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f), 1.0f);	// green
+	mat3 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f), 1.0f);	// blue
 
-	mat4 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 0.0f));;	// cyan
-	mat5 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 0.0f));	// yellow
-	mat6 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 0.0f));	// magenta
+	mat4 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 0.0f), 0.1f);	// cyan
+	mat5 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 0.0f), 0.2f);	// yellow
+	mat6 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 0.0f), 0.3f);	// magenta
 
-	mat7 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f));	// white
+	mat7 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f), 0.5f);	// white
 	
 	// --------------------------------------------------------------------------------------
 	// Initialize Mesh pointer objects
@@ -460,6 +460,10 @@ void Game::Draw(float deltaTime, float totalTime)
 			"pointLight1",				// The name of the (eventual) variable in the shader
 			&ptLight_01,				// The address of the data to set
 			sizeof(PointLight));		// The size of data to set
+
+		// Values for calculating material specularity
+		pixelShader->SetFloat("specularIntensity", entityVector[i]->GetMaterial()->GetMaterialSpecularity());
+		pixelShader->SetFloat3("cameraWorldPosition", camera->GetTransform().GetPosition());
 
 		pixelShader->CopyAllBufferData();
 

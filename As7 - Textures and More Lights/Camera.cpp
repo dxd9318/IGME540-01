@@ -24,15 +24,11 @@ Camera::Camera(DirectX::XMFLOAT3 initCamPos, DirectX::XMFLOAT3 initCamOri, float
 Camera::~Camera() {}
 
 // Getters
-DirectX::XMFLOAT4X4 Camera::GetViewMatrix() 
-{
-	return viewMatrix;
-}
+Transform Camera::GetTransform() { return cameraTransform; }
 
-DirectX::XMFLOAT4X4 Camera::GetProjectionMatrix() 
-{
-	return projectionMatrix;
-}
+DirectX::XMFLOAT4X4 Camera::GetViewMatrix() { return viewMatrix; }
+
+DirectX::XMFLOAT4X4 Camera::GetProjectionMatrix() { return projectionMatrix; }
 
 
 void Camera::UpdateViewMatrix() 

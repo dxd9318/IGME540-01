@@ -11,6 +11,7 @@ public:
 	~Camera();
 
 	// Getters
+	Transform GetTransform();
 	DirectX::XMFLOAT4X4 GetViewMatrix();
 	DirectX::XMFLOAT4X4 GetProjectionMatrix();
 

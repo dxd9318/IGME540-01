@@ -81,7 +81,7 @@ VertexToPixel main( VertexShaderInput input )
 
 	output.normal = mul((float3x3)world, input.normal);
 
-	output.worldPos = mul((float3x3)world, input.position);			// SHOULD worldPos BE A FLOAT3 OR A FLOAT4 ??? <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	output.worldPos = mul((float3x3)world, input.position);
 
 	// Whatever we return will make its way through the pipeline to the
 	// next programmable stage we're using (the pixel shader for now)
