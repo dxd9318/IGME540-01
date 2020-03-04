@@ -60,7 +60,8 @@ float3 calculateLightColor(VertexToPixel input, float3 lightDirection, float3 li
 
 	// Calculate final pixel color
 	// dotResult * diffuseColor * colorTint + ambientColor * colorTint
-	float3 finalColor = float3(dotResult, 1.0f, 1.0f) * lightDiffuseColor * input.color.rgb + lightAmbientColor * input.color.rgb;
+	float3 finalColor = dotResult * lightDiffuseColor * input.color.rgb + lightAmbientColor * input.color.rgb;
+
 
 	return float3(finalColor);
 }
@@ -77,7 +78,8 @@ float3 calculateFinalLightColor(VertexToPixel input, DirectionalLight light)	//c
 
 	// Calculate final pixel color
 	// dotResult * diffuseColor * colorTint + ambientColor * colorTint
-	float3 finalColor = float3(dotResult, 1.0f, 1.0f) * light.DiffuseColor * input.color.rgb + light.AmbientColor * input.color.rgb;
+	float3 finalColor = dotResult * light.DiffuseColor * input.color.rgb + light.AmbientColor * input.color.rgb;
+
 
 	return float3(finalColor);
 };
@@ -104,17 +106,17 @@ float4 main(VertexToPixel input) : SV_TARGET
 	//float3 finalColor = dotResult * directionalLight.DiffuseColor * input.color + directionalLight.AmbientColor * input.color;
 	//return float4(finalColor, 1);
 
-	/*return float4(
+	return float4(
 		calculateLightColor(input, -directionalLight1.Direction, directionalLight1.DiffuseColor, directionalLight1.AmbientColor) +
 			calculateLightColor(input, -directionalLight2.Direction, directionalLight2.DiffuseColor, directionalLight2.AmbientColor) +
 			calculateLightColor(input, -directionalLight3.Direction, directionalLight3.DiffuseColor, directionalLight3.AmbientColor),
-		1.0f);*/
-
-	return float4(
-		calculateFinalLightColor(input, directionalLight1) +
-			calculateFinalLightColor(input, directionalLight2) +
-			calculateFinalLightColor(input, directionalLight3) /* + calculateFinalLightColor(input, pointLight1) */, 
 		1.0f);
+
+	//return float4(
+	//	calculateFinalLightColor(input, directionalLight1) +
+	//		calculateFinalLightColor(input, directionalLight2) +
+	//		calculateFinalLightColor(input, directionalLight3) /* + calculateFinalLightColor(input, pointLight1) */, 
+	//	1.0f);
 
 	
 //return float4(input.normal, 1);
