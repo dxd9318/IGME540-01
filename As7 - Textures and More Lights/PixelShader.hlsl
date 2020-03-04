@@ -70,8 +70,8 @@ float3 calculateLightColor(VertexToPixel input, float3 lightDirection, float3 li
 		determines how matte vs shiny a surface appears.
 	*/
 	float3 V = normalize(cameraWorldPosition - input.worldPos);
-	float R = reflect(lightDirection, input.normal);
-	float spec = specularIntensity * pow(saturate(dot(R, V)), 2.0f);
+	float3 R = reflect(lightDirection, input.normal);
+	float spec = specularIntensity * pow(saturate(dot(R, V)), 32.0f);
 
 	// Calculate final pixel color
 	/* 
