@@ -8,11 +8,22 @@ struct DirectionalLight
 	float3 Direction;
 };
 
+struct PointLight
+{
+	float3 AmbientColor;
+	// padding would go here
+	float3 DiffuseColor;
+	// padding would go here
+	float3 Position;
+};
+
 cbuffer ExternalPSData : register(b0) 
 {
 	DirectionalLight directionalLight1;
 	DirectionalLight directionalLight2;
 	DirectionalLight directionalLight3;
+
+	//PointLight pointLight1;
 }
 
 // Struct representing the data we expect to receive from earlier pipeline stages
@@ -30,6 +41,7 @@ struct VertexToPixel
 	float4 position		: SV_POSITION;
 	float4 color		: COLOR;
 	float3 normal		: NORMAL;
+	float3 worldPos		: POSITION;		//pixel position to pass into pixelShader for point light calculations
 };
 
 float3 calculateFinalLightColor(VertexToPixel input, DirectionalLight light)
@@ -48,6 +60,14 @@ float3 calculateFinalLightColor(VertexToPixel input, DirectionalLight light)
 
 	return float3(finalColor);
 };
+
+/*
+	will need to either:
+		A: update the above helper method, OR			-- more elegant but not easy
+		B: create a second one for pointLights			-- easier but sloppier
+
+	// For the point light calculations, would I be using light.position, or input.worldPos to get the light direction (for the normal)?
+*/
 
 // --------------------------------------------------------
 // The entry point (main method) for our pixel shader
@@ -73,7 +93,7 @@ float4 main(VertexToPixel input) : SV_TARGET
 	return float4(
 		calculateFinalLightColor(input, directionalLight1) +
 			calculateFinalLightColor(input, directionalLight2) +
-			calculateFinalLightColor(input, directionalLight3), 
+			calculateFinalLightColor(input, directionalLight3) /* + calculateFinalLightColor(input, pointLight1) */, 
 		1.0f);
 
 //return float4(input.normal, 1);

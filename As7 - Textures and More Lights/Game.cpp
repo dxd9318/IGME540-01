@@ -146,7 +146,7 @@ void Game::Init()
 	LoadShaders();
 
 	// --------------------------------------------------------------------------------------
-	// Init Lights
+	// Init Directional Lights
 	// Yellow light
 	dirLight_01.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.2f);
 	dirLight_01.diffuseColor = DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f);
@@ -161,6 +161,11 @@ void Game::Init()
 	dirLight_03.ambientColor = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
 	dirLight_03.diffuseColor = DirectX::XMFLOAT3(0.6f, 0.3f, 0.3f);
 	dirLight_03.direction = DirectX::XMFLOAT3(2.0f, 2.0f, 0.2f);
+
+	// Init Point Lights
+	/*ptLight_01.ambientColor = DirectX::XMFLOAT3(, , );
+	ptLight_01.diffuseColor = DirectX::XMFLOAT3(, , );
+	ptLight_01.position = DirectX::XMFLOAT3(, , );*/
 
 	// --------------------------------------------------------------------------------------
 	// Init Camera
@@ -433,6 +438,7 @@ void Game::Draw(float deltaTime, float totalTime)
 
 		vs->CopyAllBufferData();
 
+		// Set directional light data in pixel shader
 		pixelShader->SetData(
 			"directionalLight1",			// The name of the (eventual) variable in the shader
 			&dirLight_01,					// The address of the data to set
@@ -447,6 +453,12 @@ void Game::Draw(float deltaTime, float totalTime)
 			"directionalLight3",			// The name of the (eventual) variable in the shader
 			&dirLight_03,					// The address of the data to set
 			sizeof(DirectionalLight));		// The size of data to set
+
+		// Set point light data in pixel shader
+		//pixelShader->SetData(
+		//	"pointLight1",				// The name of the (eventual) variable in the shader
+		//	&ptLight_01,				// The address of the data to set
+		//	sizeof(PointLight));		// The size of data to set
 
 		pixelShader->CopyAllBufferData();
 

@@ -45,6 +45,7 @@ struct VertexToPixel
 	float4 position		: SV_POSITION;	// XYZW position (System Value Position)
 	float4 color		: COLOR;        // RGBA color
 	float3 normal		: NORMAL;
+	float3 worldPos		: POSITION;		//pixel position to pass into pixelShader for point light calculations
 };
 
 // --------------------------------------------------------
@@ -80,6 +81,8 @@ VertexToPixel main( VertexShaderInput input )
 	output.color = colorTint;
 
 	output.normal = mul((float3x3)world, input.normal);
+
+	output.worldPos = mul((float3x3)world, input.position);			// SHOULD worldPos BE A FLOAT3 OR A FLOAT4 ??? <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 	// Whatever we return will make its way through the pipeline to the
 	// next programmable stage we're using (the pixel shader for now)

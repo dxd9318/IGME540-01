@@ -39,6 +39,8 @@ private:
 	DirectionalLight dirLight_02;
 	DirectionalLight dirLight_03;
 
+	PointLight ptLight_01;
+
 	// Camera Objects
 	Camera* camera = nullptr;
 
