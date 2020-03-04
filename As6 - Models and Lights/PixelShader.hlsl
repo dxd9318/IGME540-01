@@ -44,7 +44,7 @@ float3 calculateFinalLightColor(VertexToPixel input, DirectionalLight light)
 
 	// Calculate final pixel color
 	// dotResult * diffuseColor * colorTint + ambientColor * colorTint
-	float3 finalColor = dotResult * light.DiffuseColor * input.color + light.AmbientColor * input.color;
+	float3 finalColor = float3(dotResult, 1.0f, 1.0f) * light.DiffuseColor * input.color.rgb + light.AmbientColor * input.color.rgb;
 
 	return float3(finalColor);
 };
