@@ -44,7 +44,28 @@ struct VertexToPixel
 	float3 worldPos		: POSITION;		//pixel position to pass into pixelShader for point light calculations
 };
 
-float3 calculateFinalLightColor(VertexToPixel input, DirectionalLight light)
+/*
+	For directional lights, input the negated light direction for the lightDirection input.
+	For point lights, calculate input.worldPos - light.position and use the result as the lightDirection input.
+*/
+float3 calculateLightColor(VertexToPixel input, float3 lightDirection, float3 lightDiffuseColor, float3 lightAmbientColor) 
+{
+	// Normalized direction TO the light
+	float3 lightDir = normalize(lightDirection);
+
+	input.normal = normalize(input.normal);
+
+	// Calculate light amount (Normal-dot-LightDirection)
+	float dotResult = saturate(dot(input.normal, lightDir));	// clamped between 0 and 1
+
+	// Calculate final pixel color
+	// dotResult * diffuseColor * colorTint + ambientColor * colorTint
+	float3 finalColor = float3(dotResult, 1.0f, 1.0f) * lightDiffuseColor * input.color.rgb + lightAmbientColor * input.color.rgb;
+
+	return float3(finalColor);
+}
+
+float3 calculateFinalLightColor(VertexToPixel input, DirectionalLight light)	//change this to take lightDirection, lightDiffuseColor, and lightAmbientColor instead of a light object
 {
 	// Normalized direction TO the light
 	float3 lightDir = normalize(-light.Direction);
@@ -61,13 +82,6 @@ float3 calculateFinalLightColor(VertexToPixel input, DirectionalLight light)
 	return float3(finalColor);
 };
 
-/*
-	will need to either:
-		A: update the above helper method, OR			-- more elegant but not easy
-		B: create a second one for pointLights			-- easier but sloppier
-
-	// For the point light calculations, would I be using light.position, or input.worldPos to get the light direction (for the normal)?
-*/
 
 // --------------------------------------------------------
 // The entry point (main method) for our pixel shader
@@ -90,12 +104,19 @@ float4 main(VertexToPixel input) : SV_TARGET
 	//float3 finalColor = dotResult * directionalLight.DiffuseColor * input.color + directionalLight.AmbientColor * input.color;
 	//return float4(finalColor, 1);
 
+	/*return float4(
+		calculateLightColor(input, -directionalLight1.Direction, directionalLight1.DiffuseColor, directionalLight1.AmbientColor) +
+			calculateLightColor(input, -directionalLight2.Direction, directionalLight2.DiffuseColor, directionalLight2.AmbientColor) +
+			calculateLightColor(input, -directionalLight3.Direction, directionalLight3.DiffuseColor, directionalLight3.AmbientColor),
+		1.0f);*/
+
 	return float4(
 		calculateFinalLightColor(input, directionalLight1) +
 			calculateFinalLightColor(input, directionalLight2) +
 			calculateFinalLightColor(input, directionalLight3) /* + calculateFinalLightColor(input, pointLight1) */, 
 		1.0f);
 
+	
 //return float4(input.normal, 1);
 //return float4(directionalLight.DiffuseColor, 1);
 
