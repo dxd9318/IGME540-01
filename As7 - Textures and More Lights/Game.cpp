@@ -183,8 +183,8 @@ void Game::Init()
 	// --------------------------------------------------------------------------------------
 	// Initialize Material pointer objects
 	mat1 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f), 1.0f);	// red
-	mat2 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f), 1.0f);	// green
-	mat3 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f), 1.0f);	// blue
+	mat2 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f), 0.7f);	// green
+	mat3 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f), 0.5f);	// blue
 
 	mat4 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 0.0f), 0.0f);	// cyan
 	mat5 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 0.0f), 0.3f);	// yellow
