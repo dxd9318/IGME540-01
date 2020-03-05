@@ -3,6 +3,7 @@
 #include "DXCore.h"
 #include <DirectXMath.h>
 #include <wrl/client.h> // Used for ComPtr - a smart pointer for COM objects
+#include "WICTextureLoader.h"
 #include <vector>
 #include "Lights.h"
 #include "Camera.h"
@@ -34,6 +35,9 @@ private:
 	SimpleVertexShader* vertexShader;
 	SimplePixelShader* pixelShader;
 
+	// Shader resource view for loading textures
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
+
 	// Light Objects
 	DirectionalLight dirLight_01;
 	DirectionalLight dirLight_02;
@@ -43,7 +47,7 @@ private:
 
 	// Camera Objects
 	Camera* camera = nullptr;
-
+	
 	// Material Objects
 	Material* mat1 = nullptr;	// red
 	Material* mat2 = nullptr;	// green

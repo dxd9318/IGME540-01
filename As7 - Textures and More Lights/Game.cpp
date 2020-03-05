@@ -181,6 +181,16 @@ void Game::Init()
 		2.0f);		// mouse look speed
 
 	// --------------------------------------------------------------------------------------
+	// Load textures
+	DirectX::CreateWICTextureFromFile(
+		device.Get(), 
+		context.Get(), 
+		GetFullPathTo_Wide(L"../../Assets/Textures/bamboo.jpg").c_str(), 
+		0, 
+		srv.GetAddressOf());
+
+
+	// --------------------------------------------------------------------------------------
 	// Initialize Material pointer objects
 	mat1 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f), 1.0f);	// red
 	mat2 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f), 0.7f);	// green
