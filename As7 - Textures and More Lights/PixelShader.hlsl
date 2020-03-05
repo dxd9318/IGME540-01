@@ -29,6 +29,9 @@ cbuffer ExternalPSData : register(b0)
 	float3 cameraWorldPosition;
 }
 
+Texture2D diffuseTexture	: register(t0); // "t" registers
+SamplerState samplerOptions	: register(s0); // "s" registers
+
 // Struct representing the data we expect to receive from earlier pipeline stages
 // - Should match the output of our corresponding vertex shader
 // - The name of the struct itself is unimportant
@@ -44,6 +47,7 @@ struct VertexToPixel
 	float4 position		: SV_POSITION;
 	float4 color		: COLOR;
 	float3 normal		: NORMAL;
+	float2 uv			: TEXCOORD;
 	float3 worldPos		: POSITION;		// pixel position to pass into pixelShader for point light and specularity calculations
 };
 
@@ -53,6 +57,9 @@ struct VertexToPixel
 */
 float3 calculateLightColor(VertexToPixel input, float3 lightDirection, float3 lightDiffuseColor, float3 lightAmbientColor) 
 {
+	// surface color from texture}
+	float3 surfaceColor = diffuseTexture.Sample(samplerOptions, input.uv).rgb;
+
 	// Normalized direction TO the light
 	float3 lightDir = normalize(-lightDirection);	// lightDirection is always negated no matter the light source type
 
@@ -73,7 +80,7 @@ float3 calculateLightColor(VertexToPixel input, float3 lightDirection, float3 li
 	float3 R = reflect(lightDirection, input.normal);
 	float spec = specularIntensity * pow(saturate(dot(R, V)), 32.0f);
 
-	// Calculate final pixel color
+	// Calculate final pixel color	// lightAmount * lightColor * surfaceColor + ambientColor * surfaceColor
 	/* 
 		Diffuse: dotResult * diffuseColor * colorTint
 			PLUS
@@ -81,8 +88,7 @@ float3 calculateLightColor(VertexToPixel input, float3 lightDirection, float3 li
 			PLUS
 		Specular: float spec = specularIntensity * pow(saturate(dot(R,V)), specExponent);
 	*/
-	//float3 finalColor = dotResult * lightDiffuseColor * input.color.rgb + lightAmbientColor * input.color.rgb + spec;
-	float3 finalColor = input.color.rgb * (dotResult * lightDiffuseColor + lightAmbientColor) + spec;
+	float3 finalColor = (surfaceColor + input.color.rgb) * (dotResult * lightDiffuseColor + lightAmbientColor) + spec;
 
 	return float3(finalColor);
 }
@@ -101,7 +107,7 @@ float4 main(VertexToPixel input) : SV_TARGET
 	return float4(
 		calculateLightColor(input, directionalLight1.Direction, directionalLight1.DiffuseColor, directionalLight1.AmbientColor) +
 			calculateLightColor(input, directionalLight2.Direction, directionalLight2.DiffuseColor, directionalLight2.AmbientColor) +
-			calculateLightColor(input, directionalLight3.Direction, directionalLight3.DiffuseColor, directionalLight3.AmbientColor) + 
+			calculateLightColor(input, directionalLight3.Direction, directionalLight3.DiffuseColor, directionalLight3.AmbientColor) +
 			calculateLightColor(input, (input.worldPos - pointLight1.Position), pointLight1.DiffuseColor, pointLight1.AmbientColor),
 		1.0f);
 };

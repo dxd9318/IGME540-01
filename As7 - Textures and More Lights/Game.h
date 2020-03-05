@@ -36,7 +36,10 @@ private:
 	SimplePixelShader* pixelShader;
 
 	// Shader resource view for loading textures
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv_01;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv_02;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv_03;
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
 
 	// Light Objects
 	DirectionalLight dirLight_01;

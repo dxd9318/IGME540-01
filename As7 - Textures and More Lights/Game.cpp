@@ -187,20 +187,43 @@ void Game::Init()
 		context.Get(), 
 		GetFullPathTo_Wide(L"../../Assets/Textures/bamboo.jpg").c_str(), 
 		0, 
-		srv.GetAddressOf());
+		srv_01.GetAddressOf());
 
+	DirectX::CreateWICTextureFromFile(
+		device.Get(),
+		context.Get(),
+		GetFullPathTo_Wide(L"../../Assets/Textures/ground-plants.jpg").c_str(),
+		0,
+		srv_02.GetAddressOf());
+
+	DirectX::CreateWICTextureFromFile(
+		device.Get(),
+		context.Get(),
+		GetFullPathTo_Wide(L"../../Assets/Textures/wrinkled-fabric.jpg").c_str(),
+		0,
+		srv_03.GetAddressOf());
+
+	// Init sampler state
+	D3D11_SAMPLER_DESC sampDesc = {};
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	device->CreateSamplerState(&sampDesc, samplerState.GetAddressOf());
 
 	// --------------------------------------------------------------------------------------
 	// Initialize Material pointer objects
-	mat1 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f), 1.0f);	// red
-	mat2 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f), 0.7f);	// green
-	mat3 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f), 0.5f);	// blue
+	mat1 = new Material(vertexShader, pixelShader, srv_02, samplerState, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f), 1.0f);	// red
+	mat2 = new Material(vertexShader, pixelShader, srv_02, samplerState, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f), 0.7f);	// green
+	mat3 = new Material(vertexShader, pixelShader, srv_02, samplerState, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f), 0.5f);	// blue
 
-	mat4 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 0.0f), 0.0f);	// cyan
-	mat5 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 0.0f), 0.3f);	// yellow
-	mat6 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 0.0f), 0.1f);	// magenta
+	mat4 = new Material(vertexShader, pixelShader, srv_01, samplerState, DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 0.0f), 0.0f);	// cyan
+	mat5 = new Material(vertexShader, pixelShader, srv_01, samplerState, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 0.0f), 0.3f);	// yellow
+	mat6 = new Material(vertexShader, pixelShader, srv_01, samplerState, DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 0.0f), 0.1f);	// magenta
 
-	mat7 = new Material(vertexShader, pixelShader, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f), 0.1f);	// white
+	mat7 = new Material(vertexShader, pixelShader, srv_03, samplerState, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f), 0.1f);	// white
 	
 	// --------------------------------------------------------------------------------------
 	// Initialize Mesh pointer objects
@@ -448,6 +471,9 @@ void Game::Draw(float deltaTime, float totalTime)
 		vs->SetMatrix4x4("projection", camera->GetProjectionMatrix());
 
 		vs->CopyAllBufferData();
+
+		pixelShader->SetSamplerState("samplerOptions", entityVector[i]->GetMaterial()->GetSamplerState().Get());
+		pixelShader->SetShaderResourceView("diffuseTexture", entityVector[i]->GetMaterial()->GetSRV().Get());
 
 		// Set directional light data in pixel shader
 		pixelShader->SetData(
