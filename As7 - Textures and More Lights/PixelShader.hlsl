@@ -55,15 +55,10 @@ struct VertexToPixel
 	For directional lights, just use the light's direction as the lightDirection input.
 	For point lights, use (input.worldPos - pointLight.position) as the lightDirection input.
 */
-float3 calculateLightColor(VertexToPixel input, float3 lightDirection, float3 lightDiffuseColor, float3 lightAmbientColor) 
+float3 calculateLightColor(VertexToPixel input, float3 surfaceColor, float3 lightDirection, float3 lightDiffuseColor, float3 lightAmbientColor) 
 {
-	// surface color from texture}
-	float3 surfaceColor = diffuseTexture.Sample(samplerOptions, input.uv).rgb;
-
 	// Normalized direction TO the light
 	float3 lightDir = normalize(-lightDirection);	// lightDirection is always negated no matter the light source type
-
-	input.normal = normalize(input.normal);
 
 	// Calculate light amount
 	float dotResult = saturate(dot(input.normal, lightDir));	// dot product of normal to light direction, clamped between 0 and 1
@@ -77,8 +72,8 @@ float3 calculateLightColor(VertexToPixel input, float3 lightDirection, float3 li
 		determines how matte vs shiny a surface appears.
 	*/
 	float3 V = normalize(cameraWorldPosition - input.worldPos);
-	float3 R = reflect(lightDirection, input.normal);
-	float spec = specularIntensity * pow(saturate(dot(R, V)), 32.0f);
+	float3 R = reflect(normalize(lightDirection), input.normal);
+	float spec = specularIntensity * pow(saturate(dot(R, V)), 64.0f);
 
 	// Calculate final pixel color	// lightAmount * lightColor * surfaceColor + ambientColor * surfaceColor
 	/* 
@@ -104,11 +99,17 @@ float3 calculateLightColor(VertexToPixel input, float3 lightDirection, float3 li
 // --------------------------------------------------------
 float4 main(VertexToPixel input) : SV_TARGET
 {
+	// The following values will be used to calculate the final light color for each light
+	// Normalize the normal of the current pixel. 
+	input.normal = normalize(input.normal);
+	// Sample the texture to be applied to the current pixel, ie. determine surface color at this pixel
+	float3 textureSample = diffuseTexture.Sample(samplerOptions, input.uv).rgb;
+
 	return float4(
-		calculateLightColor(input, directionalLight1.Direction, directionalLight1.DiffuseColor, directionalLight1.AmbientColor) +
-			calculateLightColor(input, directionalLight2.Direction, directionalLight2.DiffuseColor, directionalLight2.AmbientColor) +
-			calculateLightColor(input, directionalLight3.Direction, directionalLight3.DiffuseColor, directionalLight3.AmbientColor) +
-			calculateLightColor(input, (input.worldPos - pointLight1.Position), pointLight1.DiffuseColor, pointLight1.AmbientColor),
+		calculateLightColor(input, textureSample, directionalLight1.Direction, directionalLight1.DiffuseColor, directionalLight1.AmbientColor) +
+			calculateLightColor(input, textureSample, directionalLight2.Direction, directionalLight2.DiffuseColor, directionalLight2.AmbientColor) +
+			calculateLightColor(input, textureSample, directionalLight3.Direction, directionalLight3.DiffuseColor, directionalLight3.AmbientColor) +
+			calculateLightColor(input, textureSample, (input.worldPos - pointLight1.Position), pointLight1.DiffuseColor, pointLight1.AmbientColor),
 		1.0f);
 };
 

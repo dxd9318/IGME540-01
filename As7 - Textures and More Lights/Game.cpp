@@ -220,10 +220,10 @@ void Game::Init()
 	mat3 = new Material(vertexShader, pixelShader, srv_02, samplerState, DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f), 0.5f);	// blue
 
 	mat4 = new Material(vertexShader, pixelShader, srv_01, samplerState, DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 0.0f), 0.0f);	// cyan
-	mat5 = new Material(vertexShader, pixelShader, srv_01, samplerState, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 0.0f), 0.3f);	// yellow
-	mat6 = new Material(vertexShader, pixelShader, srv_01, samplerState, DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 0.0f), 0.1f);	// magenta
+	mat5 = new Material(vertexShader, pixelShader, srv_01, samplerState, DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 0.0f), 1.0f);	// yellow
+	mat6 = new Material(vertexShader, pixelShader, srv_01, samplerState, DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 0.0f), 1.0f);	// magenta
 
-	mat7 = new Material(vertexShader, pixelShader, srv_03, samplerState, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f), 0.1f);	// white
+	mat7 = new Material(vertexShader, pixelShader, srv_03, samplerState, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f), 1.0f);	// white
 	
 	// --------------------------------------------------------------------------------------
 	// Initialize Mesh pointer objects
