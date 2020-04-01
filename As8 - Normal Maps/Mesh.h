@@ -33,4 +33,5 @@ private:
 
 	// Helper methods
 	void CreateBuffers(Vertex* vertArray, int vertsInArray, int* indxArray, int indxsInArray, Microsoft::WRL::ComPtr<ID3D11Device> deviceObj);
+	void CalculateTangents(Vertex* verts, int numVerts, int* indices, int numIndices);
 };
