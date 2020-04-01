@@ -83,7 +83,7 @@ float3 calculateLightColor(VertexToPixel input, float3 surfaceColor, float3 ligh
 			PLUS
 		Specular: float spec = specularIntensity * pow(saturate(dot(R,V)), specExponent);
 	*/
-	float3 finalColor = (surfaceColor + input.color.rgb) * (dotResult * lightDiffuseColor + lightAmbientColor) + spec;
+	float3 finalColor = (surfaceColor * input.color.rgb) * (dotResult * lightDiffuseColor + lightAmbientColor) + spec;
 
 	return float3(finalColor);
 }
