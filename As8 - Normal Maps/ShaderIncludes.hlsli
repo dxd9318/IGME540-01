@@ -40,6 +40,21 @@ struct VertexToPixel
 	float3 worldPos		: POSITION;		//pixel position to pass into pixelShader for point light calculations
 };
 
+struct VertexToPixelNormalMap
+{
+	// Data type
+	//  |
+	//  |   Name          Semantic
+	//  |    |                |
+	//  v    v                v
+	float4 position		: SV_POSITION;	// XYZW position (System Value Position)
+	float4 color		: COLOR;        // RGBA color
+	float3 normal		: NORMAL;
+	float2 uv			: TEXCOORD;
+	float3 worldPos		: POSITION;		//pixel position to pass into pixelShader for point light calculations
+	float3 tangent		: TANGENT;
+};
+
 struct DirectionalLight
 {
 	float3 AmbientColor;
